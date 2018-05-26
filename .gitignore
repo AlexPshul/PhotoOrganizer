@@ -3,3 +3,11 @@
 ################################################################################
 
 /.vs/PhotoOrganizer/v15
+/PhotoOrganizer/bin
+/PhotoOrganizer/obj
+/PhotoOrganizer.Business/bin
+/PhotoOrganizer.Business/obj
+/PhotoOrganizer.Infrastructure/bin
+/PhotoOrganizer.Infrastructure/obj
+/PhotoOrganizer.Services/obj
+/PhotoOrganizer.Services/bin
