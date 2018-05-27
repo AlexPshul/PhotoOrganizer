@@ -5,14 +5,143 @@
     xmlns:local="using:PhotoOrganizer.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:reactiveUi="using:ReactiveUI"
     xmlns:viewModels="using:PhotoOrganizer.ViewModels"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:media="using:Microsoft.Xaml.Interactions.Media"
     mc:Ignorable="d"
-    d:DesignHeight="300"
-    d:DesignWidth="400"
+    d:DesignHeight="1000"
+    d:DesignWidth="1920"
     d:DataContext="{d:DesignInstance viewModels:MainViewModel}">
 
     <Grid>
-        <TextBlock Text="{Binding Text}"/>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="5*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+
+        <TextBlock Style="{StaticResource TitleStyle}" Text="{Binding Source={StaticResource Strings}, Path=[Title_ChooseAlbum]}"
+                   HorizontalAlignment="Center" Margin="30, 30, 30, 10"
+                   Grid.Row="0" Grid.Column="1"/>
+
+        <ListView x:Name="AlbumsList"
+                  HorizontalAlignment="Stretch"
+                  ItemsSource="{Binding AvailableAlbums}"
+                  Grid.Row="1" Grid.Column="1" FontSize="30"
+                  Background="{StaticResource SecondaryBackgroundBrush}">
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                </Style>
+            </ListView.ItemContainerStyle>
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <Grid ColumnSpacing="10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Text="{Binding}" VerticalAlignment="Center" Style="{StaticResource InListTextBlock}"/>
+                        <Button Grid.Column="1" Style="{StaticResource TransparentButton}" Foreground="{StaticResource SecondaryBackgroundBrush}"
+                                Command="{Binding ElementName=AlbumsList, Path=DataContext.DeleteAlbumCommand}" 
+                                CommandParameter="{Binding}">
+                            <SymbolIcon Symbol="Delete"/>
+                        </Button>
+
+                    </Grid>
+
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+
+        <ProgressRing HorizontalAlignment="Center" VerticalAlignment="Center"
+                      Grid.Row="1" Grid.Column="1" IsActive="{Binding FetchingAlbums}"
+                      Style="{StaticResource MediumProgressRingStyle}"/>
+
+        <StackPanel Grid.Row="2" Grid.Column="1" Margin="30, 70" Spacing="10" 
+                    HorizontalAlignment="Stretch">
+
+            <!--<Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>-->
+
+            <Button x:Name="NewAlbumToggle"
+                    Content="{Binding Source={StaticResource Strings}, Path=[Button_NewAlbum]}"
+                    Grid.Row="0" Grid.ColumnSpan="2"
+                    HorizontalAlignment="Center" VerticalAlignment="Top"
+                    FontSize="30" Padding="20, 10"
+                    Style="{StaticResource MainButtonStyle}"
+                    RenderTransformOrigin=".5, .5">
+                <Button.RenderTransform>
+                    <ScaleTransform x:Name="NewAlbumToggleScaleTransform"/>
+                </Button.RenderTransform>
+
+                <interactivity:Interaction.Behaviors>
+                    <core:EventTriggerBehavior EventName="Click">
+                        <media:ControlStoryboardAction ControlStoryboardOption="Play">
+                            <media:ControlStoryboardAction.Storyboard>
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetName="NewAlbumToggle" Storyboard.TargetProperty="Opacity"
+                                                     To="0" Duration="0:0:0.25"/>
+                                    <DoubleAnimation Storyboard.TargetName="NewAlbumToggle" Storyboard.TargetProperty="Height"
+                                                     To="0" Duration="0:0:0.25"/>
+                                    <!--<DoubleAnimation Storyboard.TargetName="NewAlbumToggleScaleTransform" Storyboard.TargetProperty="ScaleY"
+                                                     To="0" Duration="0:0:0.25"/>-->
+                                    <!--<ObjectAnimationUsingKeyFrames Storyboard.TargetName="NewAlbumToggle" Storyboard.TargetProperty="Visibility">
+                                        <DiscreteObjectKeyFrame KeyTime="0:0:0.50" Value="Collapsed"/>
+                                    </ObjectAnimationUsingKeyFrames>-->
+                                </Storyboard>
+                            </media:ControlStoryboardAction.Storyboard>
+                        </media:ControlStoryboardAction>
+                    </core:EventTriggerBehavior>
+                </interactivity:Interaction.Behaviors>
+
+            </Button>
+
+            <!--<Button Style="{StaticResource MainButtonStyle}" Grid.Row="1" Grid.Column="0">
+                <SymbolIcon Symbol="OpenFile"/>
+            </Button>-->
+            
+            <TextBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" PlaceholderText="NAME" FontSize="30" FontFamily="{StaticResource MainFont}"
+                     Opacity="0" RenderTransformOrigin=".5, .5" x:Name="NameTextBox" IsHitTestVisible="False">
+                <TextBox.RenderTransform>
+                    <TranslateTransform x:Name="NameTextBoxTranslateTransform" Y="-40"/>
+                </TextBox.RenderTransform>
+                <interactivity:Interaction.Behaviors>
+                    <core:EventTriggerBehavior SourceObject="{Binding ElementName=NewAlbumToggle}" EventName="Click">
+                        <media:ControlStoryboardAction ControlStoryboardOption="Play">
+                            <media:ControlStoryboardAction.Storyboard>
+                                <Storyboard BeginTime="0:0:0.25">
+                                    <DoubleAnimation Storyboard.TargetName="NameTextBox" Storyboard.TargetProperty="Opacity"
+                                                     To="1" Duration="0:0:0.25"/>
+                                    <DoubleAnimation Storyboard.TargetName="NameTextBoxTranslateTransform" Storyboard.TargetProperty="Y"
+                                                     To="0" Duration="0:0:0.25"/>
+                                    <ObjectAnimationUsingKeyFrames Storyboard.TargetName="NameTextBox" Storyboard.TargetProperty="IsHitTestVisible">
+                                        <DiscreteObjectKeyFrame KeyTime="0:0:0.25" Value="True"/>
+                                    </ObjectAnimationUsingKeyFrames>
+                                </Storyboard>
+                            </media:ControlStoryboardAction.Storyboard>
+                        </media:ControlStoryboardAction>
+                    </core:EventTriggerBehavior>
+                </interactivity:Interaction.Behaviors>
+            </TextBox>
+
+        </StackPanel>
+
     </Grid>
 </UserControl>

@@ -4,7 +4,7 @@ using System.Reactive.Disposables;
 using Autofac;
 using Splat;
 
-namespace PhotoOrganizer.Infrastructure
+namespace PhotoOrganizer.UIInfrastructure
 {
     public class AutofacMutableDependencyResolver : IMutableDependencyResolver
     {
@@ -22,6 +22,9 @@ namespace PhotoOrganizer.Infrastructure
         public void Build()
         {
             _builder.RegisterModule<Module>();
+            _builder.RegisterModule<Business.Module>();
+            _builder.RegisterModule<Services.Module>();
+            _builder.RegisterModule<WindowsServices.Module>();
             _container = _builder.Build();
         }
 

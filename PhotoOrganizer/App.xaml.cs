@@ -1,21 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using PhotoOrganizer.Infrastructure;
+using PhotoOrganizer.UIInfrastructure;
 using PhotoOrganizer.Views;
 using ReactiveUI;
 using Splat;
@@ -46,6 +38,8 @@ namespace PhotoOrganizer
         /// <param name="e">Details about the launch request and process.</param>
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
+            InitializeThemeColors();
+
             var bounds = ApplicationView.GetForCurrentView().VisibleBounds;
 
             ApplicationView.PreferredLaunchViewSize = new Size(bounds.Width, bounds.Height);
@@ -89,6 +83,22 @@ namespace PhotoOrganizer
                 // Ensure the current window is active
                 Window.Current.Activate();
             }
+        }
+
+        private void InitializeThemeColors()
+        {
+            Resources["SystemControlForegroundBaseLowHighBrush"] = Resources["MainForegroundBrush"];
+            Resources["SystemControlForegroundBaseMediumHighBrush"] = Resources["SecondaryForegroundBrush"];
+            Resources["SystemControlForegroundBaseHighHighBrush"] = Resources["SecondaryForegroundBrush"];
+
+            Resources["SystemControlHighlightAltBaseHighBrush"] = Resources["SecondaryForegroundBrush"];
+            Resources["SystemControlForegroundBaseHighBrush"] = Resources["MainForegroundBrush"];
+
+            Resources["SystemControlHighlightListLowBrush"] = Resources["MediumHighlightBrush"];
+
+            Resources["SystemControlHighlightListAccentLowBrush"] = Resources["HighHighlightBrush"];
+            Resources["SystemControlHighlightListAccentMediumBrush"] = Resources["HighHighlightBrush"];
+            Resources["SystemControlHighlightListAccentHighBrush"] = Resources["MediumHighlightBrush"];
         }
 
         /// <summary>

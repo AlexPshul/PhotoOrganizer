@@ -2,7 +2,7 @@
 using Windows.UI.Xaml;
 using ReactiveUI;
 
-namespace PhotoOrganizer.Infrastructure
+namespace PhotoOrganizer.UIInfrastructure
 {
     internal class CustomViewLocator : IViewLocator
     {

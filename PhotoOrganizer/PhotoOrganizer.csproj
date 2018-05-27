@@ -95,8 +95,11 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Infrastructure\AutofacMutableDependencyResolver.cs" />
-    <Compile Include="Infrastructure\CustomViewLocator.cs" />
+    <Compile Include="Controls\CustomContentDialog.cs" />
+    <Compile Include="UIInfrastructure\AutofacMutableDependencyResolver.cs" />
+    <Compile Include="UIInfrastructure\CustomViewLocator.cs" />
+    <Compile Include="UIInfrastructure\ReactiveUIExtensions.cs" />
+    <Compile Include="Text\StringsReader.cs" />
     <Compile Include="ViewModels\IMainViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="Views\MainPage.xaml.cs">
@@ -112,7 +115,9 @@
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
+    <Content Include="Assets\Fonts\Good-Times.ttf" />
     <None Include="PhotoOrganizer_TemporaryKey.pfx" />
+    <PRIResource Include="Text\Strings.resw" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Properties\Default.rd.xml" />
@@ -129,6 +134,42 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Themes\MainTheme\Brushes.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\MainTheme\Bundle.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Themes\MainTheme\Buttons.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\MainTheme\Colors.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\MainTheme\ContentDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\MainTheme\Fonts.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\MainTheme\Lists.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\MainTheme\ProgressRings.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\MainTheme\TextBlocks.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\MainPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -158,8 +199,20 @@
       <Project>{fd834652-0602-47cf-aad2-085273441256}</Project>
       <Name>PhotoOrganizer.Infrastructure</Name>
     </ProjectReference>
+    <ProjectReference Include="..\PhotoOrganizer.Services\PhotoOrganizer.Services.csproj">
+      <Project>{8d8f097b-3e15-4bd0-9427-2f65fa347e21}</Project>
+      <Name>PhotoOrganizer.Services</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PhotoOrganizer.WindowsServices\PhotoOrganizer.WindowsServices.csproj">
+      <Project>{8aa32fc9-8bfe-44c9-a9c2-218f30fcae5e}</Project>
+      <Name>PhotoOrganizer.WindowsServices</Name>
+    </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <SDKReference Include="BehaviorsXamlSDKManaged, Version=12.0">
+      <Name>Behaviors SDK %28XAML%29</Name>
+    </SDKReference>
+  </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

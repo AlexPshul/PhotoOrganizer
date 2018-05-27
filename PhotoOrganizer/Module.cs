@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using Autofac;
 using PhotoOrganizer.Infrastructure;
+using PhotoOrganizer.UIInfrastructure;
 using ReactiveUI;
 
 namespace PhotoOrganizer

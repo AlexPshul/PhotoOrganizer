@@ -1,4 +1,6 @@
 ﻿using Autofac;
+using PhotoOrganizer.Business.Implementations;
+using PhotoOrganizer.Business.Interfaces;
 
 namespace PhotoOrganizer.Business
 {
@@ -6,7 +8,7 @@ namespace PhotoOrganizer.Business
     {
         protected override void Load(ContainerBuilder builder)
         {
-            base.Load(builder);
+            builder.RegisterType<AlbumsManager>().As<IAlbumsManager>().SingleInstance();
         }
     }
 }
