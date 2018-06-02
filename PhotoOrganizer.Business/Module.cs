@@ -9,6 +9,7 @@ namespace PhotoOrganizer.Business
         protected override void Load(ContainerBuilder builder)
         {
             builder.RegisterType<AlbumsManager>().As<IAlbumsManager>().SingleInstance();
+            builder.RegisterType<CurrentAlbumManager>().As<ICurrentAlbumManager>().SingleInstance();
         }
     }
 }

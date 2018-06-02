@@ -1,0 +1,178 @@
+﻿<UserControl
+    x:Class="PhotoOrganizer.Views.AlbumSelectView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:media="using:Microsoft.Xaml.Interactions.Media"
+    xmlns:reactiveUi="using:ReactiveUI"
+    xmlns:viewModels="using:PhotoOrganizer.ViewModels"
+    xmlns:behaviorActions="using:PhotoOrganizer.BehaviorActions"
+    mc:Ignorable="d"
+    d:DesignHeight="300"
+    d:DesignWidth="400"
+    d:DataContext="{d:DesignInstance viewModels:AlbumSelectViewModel}">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="2*" />
+            <RowDefinition Height="5*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="2*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+
+        <TextBlock Style="{StaticResource TitleStyle}"
+                   Text="{Binding Source={StaticResource Strings}, Path=[Title_ChooseAlbum]}"
+                   HorizontalAlignment="Center" Margin="30, 30, 30, 10"
+                   Grid.Row="0" Grid.Column="1" />
+
+        <ListView x:Name="AlbumsList"
+                  HorizontalAlignment="Stretch"
+                  ItemsSource="{Binding AvailableAlbums}"
+                  Grid.Row="1" Grid.Column="1" FontSize="30"
+                  Background="{StaticResource SecondaryBackgroundBrush}">
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                </Style>
+            </ListView.ItemContainerStyle>
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <Grid ColumnSpacing="10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Text="{Binding}" VerticalAlignment="Center" Style="{StaticResource InListTextBlock}" />
+                        <Button Grid.Column="1" Style="{StaticResource TransparentButton}"
+                                Foreground="{StaticResource SecondaryBackgroundBrush}"
+                                Command="{Binding ElementName=AlbumsList, Path=DataContext.OpenAlbumCommand}"
+                                CommandParameter="{Binding}"
+                                ToolTipService.ToolTip="{Binding Source={StaticResource Strings}, Path=[ToolTip_Open]}">
+                            <SymbolIcon Symbol="OpenFile"/>
+                        </Button>
+                        <Button Grid.Column="2" Style="{StaticResource TransparentButton}"
+                                Foreground="{StaticResource SecondaryBackgroundBrush}"
+                                Command="{Binding ElementName=AlbumsList, Path=DataContext.DeleteAlbumCommand}"
+                                CommandParameter="{Binding}"
+                                ToolTipService.ToolTip="{Binding Source={StaticResource Strings}, Path=[ToolTip_Delete]}">
+                            <SymbolIcon Symbol="Delete" />
+                        </Button>
+
+                    </Grid>
+
+                </DataTemplate>
+            </ListView.ItemTemplate>
+            
+            <interactivity:Interaction.Behaviors>
+                <core:EventTriggerBehavior EventName="DoubleTapped">
+                    <behaviorActions:ItemDoubleTapExecuteCommandAction Command="{Binding OpenAlbumCommand}"/>
+                </core:EventTriggerBehavior>
+            </interactivity:Interaction.Behaviors>
+
+        </ListView>
+
+        <ProgressRing HorizontalAlignment="Center" VerticalAlignment="Center"
+                      Grid.Row="1" Grid.Column="1" IsActive="{Binding IsFetchingAlbums}"
+                      Style="{StaticResource MediumProgressRingStyle}" />
+
+        <Button x:Name="NewAlbumToggle"
+                Margin="30, 70"
+                Content="{Binding Source={StaticResource Strings}, Path=[Button_NewAlbum]}"
+                Grid.Row="2" Grid.Column="1"
+                HorizontalAlignment="Center" VerticalAlignment="Top"
+                FontSize="30" Padding="20, 10"
+                Style="{StaticResource MainButtonStyle}"
+                RenderTransformOrigin=".5, 0"
+                Command="{Binding CreateNewAlbumCommand}">
+            <Button.RenderTransform>
+                <ScaleTransform x:Name="NewAlbumToggleScaleTransform" />
+            </Button.RenderTransform>
+
+            <interactivity:Interaction.Behaviors>
+                <core:DataTriggerBehavior Binding="{Binding IsCreatingAlbum}" Value="true">
+                    <media:ControlStoryboardAction ControlStoryboardOption="Play">
+                        <media:ControlStoryboardAction.Storyboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetName="NewAlbumToggle"
+                                                 Storyboard.TargetProperty="Opacity"
+                                                 To="0" Duration="0:0:0.125" />
+                                <DoubleAnimation Storyboard.TargetName="NewAlbumToggleScaleTransform"
+                                                 Storyboard.TargetProperty="ScaleY"
+                                                 To="0" Duration="0:0:0.125" />
+                            </Storyboard>
+                        </media:ControlStoryboardAction.Storyboard>
+                    </media:ControlStoryboardAction>
+                </core:DataTriggerBehavior>
+                <core:DataTriggerBehavior Binding="{Binding IsCreatingAlbum}" Value="false">
+                    <media:ControlStoryboardAction ControlStoryboardOption="Play">
+                        <media:ControlStoryboardAction.Storyboard>
+                            <Storyboard BeginTime="0:0:0.125">
+                                <DoubleAnimation Storyboard.TargetName="NewAlbumToggle"
+                                                 Storyboard.TargetProperty="Opacity"
+                                                 To="1" Duration="0:0:0.125" />
+                                <DoubleAnimation Storyboard.TargetName="NewAlbumToggleScaleTransform"
+                                                 Storyboard.TargetProperty="ScaleY"
+                                                 To="1" Duration="0:0:0.125" />
+                            </Storyboard>
+                        </media:ControlStoryboardAction.Storyboard>
+                    </media:ControlStoryboardAction>
+                </core:DataTriggerBehavior>
+            </interactivity:Interaction.Behaviors>
+
+        </Button>
+
+        <reactiveUi:ViewModelViewHost ViewModel="{Binding NewAlbumViewModel}"
+                                      Grid.Row="2" Grid.Column="1" Margin="30, 70"
+                                      HorizontalAlignment="Stretch"
+                                      Opacity="0"
+                                      x:Name="NewAlbumView"
+                                      RenderTransformOrigin=".5, 0">
+            <reactiveUi:ViewModelViewHost.RenderTransform>
+                <ScaleTransform ScaleY="0" x:Name="NewAlbumViewScaleTransform" />
+            </reactiveUi:ViewModelViewHost.RenderTransform>
+
+            <interactivity:Interaction.Behaviors>
+                <core:DataTriggerBehavior Binding="{Binding IsCreatingAlbum}" Value="true">
+                    <media:ControlStoryboardAction ControlStoryboardOption="Play">
+                        <media:ControlStoryboardAction.Storyboard>
+                            <Storyboard BeginTime="0:0:0.125">
+                                <DoubleAnimation Storyboard.TargetName="NewAlbumView"
+                                                 Storyboard.TargetProperty="Opacity"
+                                                 To="1" Duration="0:0:0.125" />
+                                <DoubleAnimation Storyboard.TargetName="NewAlbumViewScaleTransform"
+                                                 Storyboard.TargetProperty="ScaleY"
+                                                 To="1" Duration="0:0:0.125" />
+                            </Storyboard>
+                        </media:ControlStoryboardAction.Storyboard>
+                    </media:ControlStoryboardAction>
+                </core:DataTriggerBehavior>
+                <core:DataTriggerBehavior Binding="{Binding IsCreatingAlbum}" Value="false">
+                    <media:ControlStoryboardAction ControlStoryboardOption="Play">
+                        <media:ControlStoryboardAction.Storyboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetName="NewAlbumView"
+                                                 Storyboard.TargetProperty="Opacity"
+                                                 To="0" Duration="0:0:0.125" />
+                                <DoubleAnimation Storyboard.TargetName="NewAlbumViewScaleTransform"
+                                                 Storyboard.TargetProperty="ScaleY"
+                                                 To="0" Duration="0:0:0.125" />
+                            </Storyboard>
+                        </media:ControlStoryboardAction.Storyboard>
+                    </media:ControlStoryboardAction>
+                </core:DataTriggerBehavior>
+            </interactivity:Interaction.Behaviors>
+
+        </reactiveUi:ViewModelViewHost>
+
+    </Grid>
+</UserControl>

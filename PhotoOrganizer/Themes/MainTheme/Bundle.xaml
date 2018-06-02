@@ -13,6 +13,7 @@
         <ResourceDictionary Source="ProgressRings.xaml"/>
         <ResourceDictionary Source="TextBoxes.xaml"/>
         <ResourceDictionary Source="ScrollViewers.xaml"/>
+        <ResourceDictionary Source="ToolTips.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 
 </ResourceDictionary>

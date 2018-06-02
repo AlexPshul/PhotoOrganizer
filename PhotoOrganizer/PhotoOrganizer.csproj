@@ -96,6 +96,7 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="BehaviorActions\FocusAction.cs" />
+    <Compile Include="BehaviorActions\ItemDoubleTapExecuteCommandAction.cs" />
     <Compile Include="Controls\CustomContentDialog.cs" />
     <Compile Include="Converters\AnythingToUnitConverter.cs" />
     <Compile Include="Converters\InvertBooleanConverter.cs" />
@@ -103,10 +104,20 @@
     <Compile Include="UIInfrastructure\CustomViewLocator.cs" />
     <Compile Include="UIInfrastructure\ReactiveUIExtensions.cs" />
     <Compile Include="Text\StringsReader.cs" />
+    <Compile Include="ViewModels\AlbumSelectViewModel.cs" />
+    <Compile Include="ViewModels\AlbumViewModel.cs" />
+    <Compile Include="ViewModels\IAlbumSelectViewModel.cs" />
+    <Compile Include="ViewModels\IAlbumViewModel.cs" />
     <Compile Include="ViewModels\INewAlbumViewModel.cs" />
     <Compile Include="ViewModels\NewAlbumViewModel.cs" />
     <Compile Include="ViewModels\IMainViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
+    <Compile Include="Views\AlbumSelectView.xaml.cs">
+      <DependentUpon>AlbumSelectView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\AlbumView.xaml.cs">
+      <DependentUpon>AlbumView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
@@ -189,6 +200,18 @@
     <Page Include="Themes\MainTheme\TextBoxes.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\MainTheme\ToolTips.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\AlbumSelectView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\AlbumView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\MainPage.xaml">
       <Generator>MSBuild:Compile</Generator>
