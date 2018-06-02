@@ -127,13 +127,31 @@
     <value>New Album</value>
   </data>
   <data name="Content_DeleteAlbumConfirmation" xml:space="preserve">
-    <value>Are you sure you want to delete '{0}'?</value>
+    <value>Are you sure you want to delete {0}?</value>
     <comment>0 - Album Name</comment>
+  </data>
+  <data name="Error_AlbumNameInUse" xml:space="preserve">
+    <value>Album name already taken</value>
+  </data>
+  <data name="Error_CantOpenAlbum" xml:space="preserve">
+    <value>Cannot access album at path</value>
+  </data>
+  <data name="Error_InvalidDestination" xml:space="preserve">
+    <value>Please provide a valid destination path</value>
+  </data>
+  <data name="Placeholder_Destination" xml:space="preserve">
+    <value>Destination</value>
+  </data>
+  <data name="Placeholder_Source" xml:space="preserve">
+    <value>Source</value>
   </data>
   <data name="Title_ChooseAlbum" xml:space="preserve">
     <value>Choose Album</value>
   </data>
   <data name="Title_DeleteAlbum" xml:space="preserve">
     <value>Delete Album</value>
+  </data>
+  <data name="Title_NewAlbumBaseName" xml:space="preserve">
+    <value>My New Album</value>
   </data>
 </root>

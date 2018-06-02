@@ -4,5 +4,6 @@
     <FontFamily x:Key="MainFont">ms-appx:///Assets/Fonts/Good-Times.ttf#Good Times</FontFamily>
 
     <x:Double x:Key="TitleFontSize">40</x:Double>
-    
+    <x:Double x:Key="CommentFontSize">14</x:Double>
+
 </ResourceDictionary>

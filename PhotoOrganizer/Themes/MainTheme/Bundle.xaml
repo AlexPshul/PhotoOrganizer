@@ -11,6 +11,8 @@
         <ResourceDictionary Source="Lists.xaml"/>
         <ResourceDictionary Source="ContentDialog.xaml"/>
         <ResourceDictionary Source="ProgressRings.xaml"/>
+        <ResourceDictionary Source="TextBoxes.xaml"/>
+        <ResourceDictionary Source="ScrollViewers.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 
 </ResourceDictionary>

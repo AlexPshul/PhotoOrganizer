@@ -21,5 +21,10 @@
         <Setter Property="FontWeight" Value="Bold"/>
         <Setter Property="FontFamily" Value="{StaticResource MainFont}"/>
     </Style>
+    
+    <Style TargetType="TextBlock" x:Key="CommentTextBlock" BasedOn="{StaticResource BaseTextBlockStyle}">
+        <Setter Property="FontSize" Value="{StaticResource CommentFontSize}"/>
+        <Setter Property="Foreground" Value="{StaticResource HighHighlightBrush}"/>
+    </Style>
 
 </ResourceDictionary>

@@ -9,6 +9,7 @@ namespace PhotoOrganizer.WindowsServices
         protected override void Load(ContainerBuilder builder)
         {
             builder.RegisterType<LocalStorageService>().As<ILocalStorageService>().SingleInstance();
+            builder.RegisterType<FileSystemService>().As<IFileSystemService>().SingleInstance();
         }
     }
 }

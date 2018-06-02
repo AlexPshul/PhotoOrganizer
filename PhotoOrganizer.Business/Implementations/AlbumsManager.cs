@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using PhotoOrganizer.Business.Interfaces;
@@ -13,17 +14,40 @@ namespace PhotoOrganizer.Business.Implementations
         private const string AlbumsGroup = "Albums";
 
         private readonly ILocalStorageService _localStorageService;
+        private readonly IFileSystemService _fileSystemService;
 
-        public AlbumsManager(ILocalStorageService localStorageService)
+        public AlbumsManager(ILocalStorageService localStorageService, IFileSystemService fileSystemService)
         {
             _localStorageService = localStorageService;
+            _fileSystemService = fileSystemService;
         }
 
-        public async Task<IReadOnlyCollection<string>> GetAvailableAlbums()
+        public Task<bool> DoesAlbumSourceExists(string albumPath) => _fileSystemService.DoesDirectoryExists(albumPath);
+
+        public Task<bool> IsValidDestinationForAlbum(string destinationPath) => _fileSystemService.IsValidDirectory(destinationPath);
+
+        public Task<IReadOnlyCollection<string>> GetAvailableAlbums() => _localStorageService.GetAvailableKeys(AlbumsGroup);
+        public async Task<bool> IsAlbumNameTaken(string albumName)
         {
-            await Task.Delay(5000);
-            return new[] { "ALBUM 1", "ALBUM 2", "ALBUM 3" }.ToReadOnlyCollection();
-            //return _localStorageService.GetAvailableKeys(AlbumsGroup);
+            IReadOnlyCollection<string> availableAlbums = await GetAvailableAlbums();
+            return availableAlbums.Contains(albumName ?? "");
+        }
+
+        public async Task<string> GetNextAvailableAlbumName(string baseName)
+        {
+            IReadOnlyCollection<string> availableAlbums = await GetAvailableAlbums();
+
+            string availableName = baseName;
+            bool isNameAvailable = availableAlbums.All(albumName => albumName != availableName);
+            
+            int serialNumber = 2;
+            while (!isNameAvailable)
+            {
+                availableName = baseName + $" ({serialNumber++})";
+                isNameAvailable = availableAlbums.All(albumName => albumName != availableName);
+            }
+
+            return availableName;
         }
 
         public async Task CreateAlbum(Album album)

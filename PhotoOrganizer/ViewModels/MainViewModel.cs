@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Reactive.Threading.Tasks;
 using System.Threading;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.Core;
+using Windows.UI.Core;
 using Windows.UI.Xaml.Controls;
 using PhotoOrganizer.Business.Interfaces;
 using PhotoOrganizer.Controls;
@@ -16,7 +19,7 @@ using ReactiveUI;
 
 namespace PhotoOrganizer.ViewModels
 {
-    public class MainViewModel : ReactiveObject, IMainViewModel, ISupportsActivation
+    internal class MainViewModel : ReactiveObject, IMainViewModel, ISupportsActivation
     {
         #region Private Members
 
@@ -33,28 +36,49 @@ namespace PhotoOrganizer.ViewModels
             set => this.RaiseAndSetIfChanged(ref _availableAlbums, value);
         }
 
-        public ReactiveCommand DeleteAlbumCommand { get; }
+        public INewAlbumViewModel NewAlbumViewModel { get; }
 
-        private bool _fetchingAlbums;
-        public bool FetchingAlbums
+        public ReactiveCommand CreateNewAlbumCommand { get; }
+        public ReactiveCommand<string, Unit> DeleteAlbumCommand { get; }
+
+        public ReactiveCommand LoadAlbumsCommand { get; }
+
+        private readonly ObservableAsPropertyHelper<bool> _isFetchingAlbumns;
+        public bool IsFetchingAlbums => _isFetchingAlbumns?.Value ?? false;
+
+        private bool _isCreatingAlbum;
+        public bool IsCreatingAlbum
         {
-            get => _fetchingAlbums;
-            set => this.RaiseAndSetIfChanged(ref _fetchingAlbums, value);
+            get => _isCreatingAlbum;
+            set => this.RaiseAndSetIfChanged(ref _isCreatingAlbum, value);
         }
 
         public ViewModelActivator Activator { get; } = new ViewModelActivator();
-
+        
         #endregion
 
         #region Constructors
 
-        public MainViewModel(IAlbumsManager albumsManager)
+        public MainViewModel(INewAlbumViewModel newAlbumViewModel, IAlbumsManager albumsManager)
         {
+            NewAlbumViewModel = newAlbumViewModel;
+            NewAlbumViewModel.Canceled
+                    .Merge(NewAlbumViewModel.Created.Select(_ => Unit.Default))
+                    .Subscribe(_ => IsCreatingAlbum = false);
+
             _albumsManager = albumsManager;
 
-            this.WhenActivated(() => LoadAlbums());
+            this.WhenActivated(async () => await LoadAlbums());
 
+            CreateNewAlbumCommand = ReactiveCommand.Create(() => IsCreatingAlbum = true);
             DeleteAlbumCommand = ReactiveCommand.CreateFromTask<string>(DeleteAlbum);
+            LoadAlbumsCommand = ReactiveCommand.CreateFromTask(LoadAlbums);
+
+            DeleteAlbumCommand.InvokeCommand(NewAlbumViewModel.UpdateNextAvailableAlbumNameCommand);
+
+            _isFetchingAlbumns = LoadAlbumsCommand.IsExecuting.ToProperty(this, self => self.IsFetchingAlbums);
+
+            NewAlbumViewModel.Created.Select(_ => Unit.Default).InvokeCommand(LoadAlbumsCommand);
         }
 
         #endregion
@@ -63,10 +87,9 @@ namespace PhotoOrganizer.ViewModels
 
         private async Task DeleteAlbum(string albumName)
         {
-            CustomContentDialog deleteDialog = new CustomContentDialog
+            CustomContentDialog deleteDialog = new CustomContentDialog(StringsReader.Get("Content_DeleteAlbumConfirmation"), albumName)
             {
                 Title = StringsReader.Get("Title_DeleteAlbum"),
-                Content = string.Format(StringsReader.Get("Content_DeleteAlbumConfirmation"), albumName),
                 PrimaryButtonText = StringsReader.Get("Button_DeletePrimary"),
                 SecondaryButtonText = StringsReader.Get("Button_DeleteSecondary")
             };
@@ -80,14 +103,13 @@ namespace PhotoOrganizer.ViewModels
             AvailableAlbums.Remove(albumName);
         }
 
-        private async void LoadAlbums()
+        private async Task LoadAlbums()
         {
-            FetchingAlbums = true;
-            using (Disposable.Create(() => FetchingAlbums = false))
+            IReadOnlyCollection<string> albums = await _albumsManager.GetAvailableAlbums();
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
-                IReadOnlyCollection<string> albums = await _albumsManager.GetAvailableAlbums();
                 AvailableAlbums = new ObservableCollection<string>(albums);
-            }
+            });
         }
 
         #endregion

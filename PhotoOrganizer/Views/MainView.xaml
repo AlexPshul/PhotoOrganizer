@@ -9,6 +9,7 @@
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:media="using:Microsoft.Xaml.Interactions.Media"
+    xmlns:reactiveUi="using:ReactiveUI"
     mc:Ignorable="d"
     d:DesignHeight="1000"
     d:DesignWidth="1920"
@@ -63,85 +64,89 @@
         </ListView>
 
         <ProgressRing HorizontalAlignment="Center" VerticalAlignment="Center"
-                      Grid.Row="1" Grid.Column="1" IsActive="{Binding FetchingAlbums}"
+                      Grid.Row="1" Grid.Column="1" IsActive="{Binding IsFetchingAlbums}"
                       Style="{StaticResource MediumProgressRingStyle}"/>
 
-        <StackPanel Grid.Row="2" Grid.Column="1" Margin="30, 70" Spacing="10" 
-                    HorizontalAlignment="Stretch">
+        <Button x:Name="NewAlbumToggle"
+                Margin="30, 70" 
+                Content="{Binding Source={StaticResource Strings}, Path=[Button_NewAlbum]}"
+                Grid.Row="2" Grid.Column="1"
+                HorizontalAlignment="Center" VerticalAlignment="Top"
+                FontSize="30" Padding="20, 10"
+                Style="{StaticResource MainButtonStyle}"
+                RenderTransformOrigin=".5, 0"
+                Command="{Binding CreateNewAlbumCommand}">
+            <Button.RenderTransform>
+                <ScaleTransform x:Name="NewAlbumToggleScaleTransform"/>
+            </Button.RenderTransform>
 
-            <!--<Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>-->
+            <interactivity:Interaction.Behaviors>
+                <core:DataTriggerBehavior Binding="{Binding IsCreatingAlbum}" Value="true">
+                    <media:ControlStoryboardAction ControlStoryboardOption="Play">
+                        <media:ControlStoryboardAction.Storyboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetName="NewAlbumToggle" Storyboard.TargetProperty="Opacity"
+                                                 To="0" Duration="0:0:0.125"/>
+                                <DoubleAnimation Storyboard.TargetName="NewAlbumToggleScaleTransform" Storyboard.TargetProperty="ScaleY"
+                                                 To="0" Duration="0:0:0.125"/>
+                            </Storyboard>
+                        </media:ControlStoryboardAction.Storyboard>
+                    </media:ControlStoryboardAction>
+                </core:DataTriggerBehavior>
+                <core:DataTriggerBehavior Binding="{Binding IsCreatingAlbum}" Value="false">
+                    <media:ControlStoryboardAction ControlStoryboardOption="Play">
+                        <media:ControlStoryboardAction.Storyboard>
+                            <Storyboard BeginTime="0:0:0.125">
+                                <DoubleAnimation Storyboard.TargetName="NewAlbumToggle" Storyboard.TargetProperty="Opacity"
+                                                 To="1" Duration="0:0:0.125"/>
+                                <DoubleAnimation Storyboard.TargetName="NewAlbumToggleScaleTransform" Storyboard.TargetProperty="ScaleY"
+                                                 To="1" Duration="0:0:0.125"/>
+                            </Storyboard>
+                        </media:ControlStoryboardAction.Storyboard>
+                    </media:ControlStoryboardAction>
+                </core:DataTriggerBehavior>
+            </interactivity:Interaction.Behaviors>
 
-            <Button x:Name="NewAlbumToggle"
-                    Content="{Binding Source={StaticResource Strings}, Path=[Button_NewAlbum]}"
-                    Grid.Row="0" Grid.ColumnSpan="2"
-                    HorizontalAlignment="Center" VerticalAlignment="Top"
-                    FontSize="30" Padding="20, 10"
-                    Style="{StaticResource MainButtonStyle}"
-                    RenderTransformOrigin=".5, .5">
-                <Button.RenderTransform>
-                    <ScaleTransform x:Name="NewAlbumToggleScaleTransform"/>
-                </Button.RenderTransform>
+        </Button>
 
-                <interactivity:Interaction.Behaviors>
-                    <core:EventTriggerBehavior EventName="Click">
-                        <media:ControlStoryboardAction ControlStoryboardOption="Play">
-                            <media:ControlStoryboardAction.Storyboard>
-                                <Storyboard>
-                                    <DoubleAnimation Storyboard.TargetName="NewAlbumToggle" Storyboard.TargetProperty="Opacity"
-                                                     To="0" Duration="0:0:0.25"/>
-                                    <DoubleAnimation Storyboard.TargetName="NewAlbumToggle" Storyboard.TargetProperty="Height"
-                                                     To="0" Duration="0:0:0.25"/>
-                                    <!--<DoubleAnimation Storyboard.TargetName="NewAlbumToggleScaleTransform" Storyboard.TargetProperty="ScaleY"
-                                                     To="0" Duration="0:0:0.25"/>-->
-                                    <!--<ObjectAnimationUsingKeyFrames Storyboard.TargetName="NewAlbumToggle" Storyboard.TargetProperty="Visibility">
-                                        <DiscreteObjectKeyFrame KeyTime="0:0:0.50" Value="Collapsed"/>
-                                    </ObjectAnimationUsingKeyFrames>-->
-                                </Storyboard>
-                            </media:ControlStoryboardAction.Storyboard>
-                        </media:ControlStoryboardAction>
-                    </core:EventTriggerBehavior>
-                </interactivity:Interaction.Behaviors>
+        <reactiveUi:ViewModelViewHost ViewModel="{Binding NewAlbumViewModel}"
+                                      Grid.Row="2" Grid.Column="1" Margin="30, 70"
+                                      HorizontalAlignment="Stretch"
+                                      Opacity="0"
+                                      x:Name="NewAlbumView"
+                                      RenderTransformOrigin=".5, 0">
+            <reactiveUi:ViewModelViewHost.RenderTransform>
+                <ScaleTransform ScaleY="0" x:Name="NewAlbumViewScaleTransform"/>
+            </reactiveUi:ViewModelViewHost.RenderTransform>
 
-            </Button>
+            <interactivity:Interaction.Behaviors>
+                <core:DataTriggerBehavior Binding="{Binding IsCreatingAlbum}" Value="true">
+                    <media:ControlStoryboardAction ControlStoryboardOption="Play">
+                        <media:ControlStoryboardAction.Storyboard>
+                            <Storyboard BeginTime="0:0:0.125">
+                                <DoubleAnimation Storyboard.TargetName="NewAlbumView" Storyboard.TargetProperty="Opacity"
+                                                 To="1" Duration="0:0:0.125"/>
+                                <DoubleAnimation Storyboard.TargetName="NewAlbumViewScaleTransform" Storyboard.TargetProperty="ScaleY"
+                                                 To="1" Duration="0:0:0.125"/>
+                            </Storyboard>
+                        </media:ControlStoryboardAction.Storyboard>
+                    </media:ControlStoryboardAction>
+                </core:DataTriggerBehavior>
+                <core:DataTriggerBehavior Binding="{Binding IsCreatingAlbum}" Value="false">
+                    <media:ControlStoryboardAction ControlStoryboardOption="Play">
+                        <media:ControlStoryboardAction.Storyboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetName="NewAlbumView" Storyboard.TargetProperty="Opacity"
+                                                 To="0" Duration="0:0:0.125"/>
+                                <DoubleAnimation Storyboard.TargetName="NewAlbumViewScaleTransform" Storyboard.TargetProperty="ScaleY"
+                                                 To="0" Duration="0:0:0.125"/>
+                            </Storyboard>
+                        </media:ControlStoryboardAction.Storyboard>
+                    </media:ControlStoryboardAction>
+                </core:DataTriggerBehavior>
+            </interactivity:Interaction.Behaviors>
 
-            <!--<Button Style="{StaticResource MainButtonStyle}" Grid.Row="1" Grid.Column="0">
-                <SymbolIcon Symbol="OpenFile"/>
-            </Button>-->
-            
-            <TextBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" PlaceholderText="NAME" FontSize="30" FontFamily="{StaticResource MainFont}"
-                     Opacity="0" RenderTransformOrigin=".5, .5" x:Name="NameTextBox" IsHitTestVisible="False">
-                <TextBox.RenderTransform>
-                    <TranslateTransform x:Name="NameTextBoxTranslateTransform" Y="-40"/>
-                </TextBox.RenderTransform>
-                <interactivity:Interaction.Behaviors>
-                    <core:EventTriggerBehavior SourceObject="{Binding ElementName=NewAlbumToggle}" EventName="Click">
-                        <media:ControlStoryboardAction ControlStoryboardOption="Play">
-                            <media:ControlStoryboardAction.Storyboard>
-                                <Storyboard BeginTime="0:0:0.25">
-                                    <DoubleAnimation Storyboard.TargetName="NameTextBox" Storyboard.TargetProperty="Opacity"
-                                                     To="1" Duration="0:0:0.25"/>
-                                    <DoubleAnimation Storyboard.TargetName="NameTextBoxTranslateTransform" Storyboard.TargetProperty="Y"
-                                                     To="0" Duration="0:0:0.25"/>
-                                    <ObjectAnimationUsingKeyFrames Storyboard.TargetName="NameTextBox" Storyboard.TargetProperty="IsHitTestVisible">
-                                        <DiscreteObjectKeyFrame KeyTime="0:0:0.25" Value="True"/>
-                                    </ObjectAnimationUsingKeyFrames>
-                                </Storyboard>
-                            </media:ControlStoryboardAction.Storyboard>
-                        </media:ControlStoryboardAction>
-                    </core:EventTriggerBehavior>
-                </interactivity:Interaction.Behaviors>
-            </TextBox>
-
-        </StackPanel>
+        </reactiveUi:ViewModelViewHost>
 
     </Grid>
 </UserControl>

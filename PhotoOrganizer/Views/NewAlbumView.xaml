@@ -1,0 +1,235 @@
+﻿<UserControl
+    x:Class="PhotoOrganizer.Views.NewAlbumView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:PhotoOrganizer.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewModels="using:PhotoOrganizer.ViewModels"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:media="using:Microsoft.Xaml.Interactions.Media"
+    xmlns:behaviorActions="using:PhotoOrganizer.BehaviorActions"
+    mc:Ignorable="d"
+    d:DesignHeight="300"
+    d:DesignWidth="400"
+    d:DataContext="{d:DesignInstance viewModels:NewAlbumViewModel}">
+
+    <StackPanel Spacing="10">
+
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+            <TextBox x:Name="AlbumNameTextBox"
+                     FontSize="30" FontFamily="{StaticResource MainFont}"
+                     HorizontalAlignment="Stretch"
+                     TextAlignment="Center"
+                     VerticalAlignment="Center"
+                     MaxLength="20"
+                     Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                     Background="Transparent"
+                     BorderBrush="Transparent"
+                     Foreground="{StaticResource HighHighlightBrush}"
+                     Width="500">
+                <interactivity:Interaction.Behaviors>
+                    <core:EventTriggerBehavior EventName="LostFocus">
+                        <core:InvokeCommandAction Command="{Binding UpdateNextAvailableAlbumNameCommand}" InputConverter="{StaticResource AnythingToUnitConverter}"/>
+                    </core:EventTriggerBehavior>
+                    <core:EventTriggerBehavior EventName="Click" SourceObject="{Binding ElementName=EditNameButton}">
+                        <behaviorActions:FocusAction TargetControl="{Binding ElementName=AlbumNameTextBox}"/>
+                    </core:EventTriggerBehavior>
+                </interactivity:Interaction.Behaviors>
+            </TextBox>
+            <Button x:Name="EditNameButton"
+                    Style="{StaticResource MainButtonStyle}" 
+                    VerticalAlignment="Stretch"
+                    Margin="5"
+                    Width="{Binding ElementName=EditNameButton, Path=Height}"
+                    Visibility="{Binding ElementName=AlbumNameTextBox, Path=IsFocusEngaged, Converter={StaticResource InvertBooleanConverter}}">
+                <FontIcon Glyph="&#xE70F;" FontSize="20" FontWeight="Bold"/>
+            </Button>
+        </StackPanel>
+
+        <TextBlock x:Name="NameComment"
+                   Margin="255, -10, 0, 20"
+                   Text="{Binding Source={StaticResource Strings}, Path=[Error_AlbumNameInUse]}"
+                   Style="{StaticResource CommentTextBlock}"
+                   Opacity="0" RenderTransformOrigin=".5, 0"
+                   Foreground="{StaticResource MainForegroundBrush}">
+            <TextBlock.RenderTransform>
+                <TranslateTransform Y="-20" x:Name="NameCommentTranslate"/>
+            </TextBlock.RenderTransform>
+                <interactivity:Interaction.Behaviors>
+                    <core:DataTriggerBehavior Binding="{Binding IsNameInUse}" Value="True">
+                        <media:ControlStoryboardAction ControlStoryboardOption="Play">
+                            <media:ControlStoryboardAction.Storyboard>
+                                <Storyboard>
+                                    <DoubleAnimation To="0" Duration="0:0:0.125"
+                                                     Storyboard.TargetName="NameCommentTranslate" Storyboard.TargetProperty="Y"/>
+                                    <DoubleAnimation To="1" Duration="0:0:0.125"
+                                                     Storyboard.TargetName="NameComment" Storyboard.TargetProperty="Opacity"/>
+                                </Storyboard>
+                            </media:ControlStoryboardAction.Storyboard>
+                        </media:ControlStoryboardAction>
+                    </core:DataTriggerBehavior>
+                    <core:DataTriggerBehavior Binding="{Binding IsNameInUse}" Value="False">
+                        <media:ControlStoryboardAction ControlStoryboardOption="Play">
+                            <media:ControlStoryboardAction.Storyboard>
+                                <Storyboard>
+                                    <DoubleAnimation To="-20" Duration="0:0:0.125"
+                                                     Storyboard.TargetName="NameCommentTranslate" Storyboard.TargetProperty="Y"/>
+                                    <DoubleAnimation To="0" Duration="0:0:0.125"
+                                                     Storyboard.TargetName="NameComment" Storyboard.TargetProperty="Opacity"/>
+                                </Storyboard>
+                            </media:ControlStoryboardAction.Storyboard>
+                        </media:ControlStoryboardAction>
+                    </core:DataTriggerBehavior>
+                </interactivity:Interaction.Behaviors>
+        </TextBlock>
+
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock x:Name="SourceComment"
+                       Margin="12, 0"
+                       Text="{Binding Source={StaticResource Strings}, Path=[Error_CantOpenAlbum]}"
+                       Grid.Row="1" Grid.Column="0" 
+                       Style="{StaticResource CommentTextBlock}"
+                       Opacity="0" RenderTransformOrigin=".5, 0">
+                <TextBlock.RenderTransform>
+                    <TranslateTransform Y="-20" x:Name="SourceCommentTranslate"/>
+                </TextBlock.RenderTransform>
+                <interactivity:Interaction.Behaviors>
+                    <core:DataTriggerBehavior Binding="{Binding IsSourceInvalid}" Value="True">
+                        <media:ControlStoryboardAction ControlStoryboardOption="Play">
+                            <media:ControlStoryboardAction.Storyboard>
+                                <Storyboard>
+                                    <DoubleAnimation To="0" Duration="0:0:0.125"
+                                                     Storyboard.TargetName="SourceCommentTranslate" Storyboard.TargetProperty="Y"/>
+                                    <DoubleAnimation To="1" Duration="0:0:0.125"
+                                                     Storyboard.TargetName="SourceComment" Storyboard.TargetProperty="Opacity"/>
+                                </Storyboard>
+                            </media:ControlStoryboardAction.Storyboard>
+                        </media:ControlStoryboardAction>
+                    </core:DataTriggerBehavior>
+                    <core:DataTriggerBehavior Binding="{Binding IsSourceInvalid}" Value="False">
+                        <media:ControlStoryboardAction ControlStoryboardOption="Play">
+                            <media:ControlStoryboardAction.Storyboard>
+                                <Storyboard>
+                                    <DoubleAnimation To="-20" Duration="0:0:0.125"
+                                                     Storyboard.TargetName="SourceCommentTranslate" Storyboard.TargetProperty="Y"/>
+                                    <DoubleAnimation To="0" Duration="0:0:0.125"
+                                                     Storyboard.TargetName="SourceComment" Storyboard.TargetProperty="Opacity"/>
+                                </Storyboard>
+                            </media:ControlStoryboardAction.Storyboard>
+                        </media:ControlStoryboardAction>
+                    </core:DataTriggerBehavior>
+                </interactivity:Interaction.Behaviors>
+            </TextBlock>
+
+            <TextBox Grid.Row="0" Grid.Column="0"
+                     PlaceholderText="{Binding Source={StaticResource Strings}, Path=[Placeholder_Source]}" 
+                     FontSize="20" FontFamily="{StaticResource MainFont}"
+                     Text="{Binding SourceFolder, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+
+            <Button Grid.Row="0" Grid.Column="1" 
+                    Style="{StaticResource MainButtonStyle}"
+                    VerticalAlignment="Stretch" Margin="5, 2"
+                    Command="{Binding FindSourceFolderCommand}">
+                <SymbolIcon Symbol="Find"/>
+            </Button>
+
+        </Grid>
+
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock x:Name="DestinationComment"
+                       Margin="12, 0"
+                       Text="{Binding Source={StaticResource Strings}, Path=[Error_InvalidDestination]}"
+                       Grid.Row="1" Grid.Column="0" 
+                       Style="{StaticResource CommentTextBlock}"
+                       Opacity="0" RenderTransformOrigin=".5, 0">
+                <TextBlock.RenderTransform>
+                    <TranslateTransform Y="-20" x:Name="DestinationCommentTranslate"/>
+                </TextBlock.RenderTransform>
+                <interactivity:Interaction.Behaviors>
+                    <core:DataTriggerBehavior Binding="{Binding IsDestinationInvalid}" Value="True">
+                        <media:ControlStoryboardAction ControlStoryboardOption="Play">
+                            <media:ControlStoryboardAction.Storyboard>
+                                <Storyboard>
+                                    <DoubleAnimation To="0" Duration="0:0:0.125"
+                                                     Storyboard.TargetName="DestinationCommentTranslate" Storyboard.TargetProperty="Y"/>
+                                    <DoubleAnimation To="1" Duration="0:0:0.125"
+                                                     Storyboard.TargetName="DestinationComment" Storyboard.TargetProperty="Opacity"/>
+                                </Storyboard>
+                            </media:ControlStoryboardAction.Storyboard>
+                        </media:ControlStoryboardAction>
+                    </core:DataTriggerBehavior>
+                    <core:DataTriggerBehavior Binding="{Binding IsDestinationInvalid}" Value="False">
+                        <media:ControlStoryboardAction ControlStoryboardOption="Play">
+                            <media:ControlStoryboardAction.Storyboard>
+                                <Storyboard>
+                                    <DoubleAnimation To="-20" Duration="0:0:0.125"
+                                                     Storyboard.TargetName="DestinationCommentTranslate" Storyboard.TargetProperty="Y"/>
+                                    <DoubleAnimation To="0" Duration="0:0:0.125"
+                                                     Storyboard.TargetName="DestinationComment" Storyboard.TargetProperty="Opacity"/>
+                                </Storyboard>
+                            </media:ControlStoryboardAction.Storyboard>
+                        </media:ControlStoryboardAction>
+                    </core:DataTriggerBehavior>
+                </interactivity:Interaction.Behaviors>
+            </TextBlock>
+
+            <TextBox Grid.Row="0" Grid.Column="0"
+                     PlaceholderText="{Binding Source={StaticResource Strings}, Path=[Placeholder_Destination]}" 
+                     FontSize="20" FontFamily="{StaticResource MainFont}"
+                     Text="{Binding DestinationFolder, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged }"/>
+
+            <Button Grid.Row="0" Grid.Column="1" 
+                    Style="{StaticResource MainButtonStyle}"
+                    VerticalAlignment="Stretch" Margin="5, 2"
+                    Command="{Binding FindDestinationFoldercommand}">
+                <SymbolIcon Symbol="Find"/>
+            </Button>
+
+        </Grid>
+
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="10" Margin="20">
+            <Button Style="{StaticResource MainButtonStyle}" Command="{Binding CreateCommand}" Padding="10">
+                <StackPanel Orientation="Horizontal" Spacing="5">
+                    <TextBlock Text="Create" FontSize="20"/>
+                    <Grid>
+                        <FontIcon x:Name="AcceptIcon" 
+                                  Visibility="{Binding IsCreatingAlbum, Converter={StaticResource InvertBooleanConverter}}"
+                                  FontFamily="Segoe MDL2 Assets" Glyph="&#xE8FB;"/>
+                        <ProgressRing Width="{Binding ElementName=AcceptIcon, Path=Width}"
+                                      Height="{Binding ElementName=AcceptIcon, Path=Height}"
+                                      IsActive="{Binding IsCreatingAlbum}"/>
+                    </Grid>
+                </StackPanel>
+            </Button>
+            <Button Style="{StaticResource MainButtonStyle}" Command="{Binding CancelCommand}" Padding="10">
+                <StackPanel Orientation="Horizontal" Spacing="5">
+                    <TextBlock Text="Cancel" FontSize="20"/>
+                    <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE711;" />
+                </StackPanel>
+            </Button>
+        </StackPanel>
+
+    </StackPanel>
+
+</UserControl>

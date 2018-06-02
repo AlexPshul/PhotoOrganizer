@@ -16,7 +16,7 @@ namespace PhotoOrganizer
 
         private void RegisterViewModels(ContainerBuilder builder)
         {
-            ThisAssembly.ExportedTypes
+            ThisAssembly.GetTypes()
                 .Where(type => type.IsClass)
                 .Where(type => type.Name.EndsWith("ViewModel"))
                 .Where(type => type.GetInterfaces()

@@ -1,5 +1,6 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:controls="using:PhotoOrganizer.Controls">
 
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="Buttons.xaml"/>
@@ -8,7 +9,7 @@
     </ResourceDictionary.MergedDictionaries>
 
     <!-- Default style for Windows.UI.Xaml.Controls.ContentDialog -->
-    <Style TargetType="ContentDialog">
+    <Style TargetType="controls:CustomContentDialog">
         <Setter Property="Foreground" Value="{StaticResource MainForegroundBrush}"/>
         <Setter Property="Background" Value="{StaticResource MainBackgroundBrush}"/>
         <Setter Property="HorizontalAlignment" Value="Center" />
@@ -23,7 +24,7 @@
         <Setter Property="Template">
 
             <Setter.Value>
-                <ControlTemplate TargetType="ContentDialog">
+                <ControlTemplate TargetType="controls:CustomContentDialog">
                     <Border x:Name="Container">
                         <Grid x:Name="LayoutRoot">
                             <Grid.RowDefinitions>
@@ -88,14 +89,23 @@
                                                 </ContentControl.Template>
                                             </ContentControl>
                                             <ContentPresenter x:Name="Content"
-                                                              ContentTemplate="{TemplateBinding ContentTemplate}"
                                                               Content="{TemplateBinding Content}"
                                                               FontSize="{ThemeResource ControlContentThemeFontSize}"
                                                               FontFamily="{StaticResource MainFont}"
                                                               Margin="{ThemeResource ContentDialogContentMargin}"
                                                               Foreground="{TemplateBinding Foreground}"
                                                               Grid.Row="1"
-                                                              TextWrapping="Wrap" />
+                                                              TextWrapping="Wrap"/>
+                                            <TextBlock FontSize="{ThemeResource ControlContentThemeFontSize}"
+                                                       FontFamily="{StaticResource MainFont}"
+                                                       Margin="{ThemeResource ContentDialogContentMargin}"
+                                                       Foreground="{TemplateBinding Foreground}"
+                                                       Grid.Row="1"
+                                                       TextWrapping="Wrap">
+                                                <Run Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=MessageFirstPart}"/>
+                                                <Run Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Parameter}" Foreground="{StaticResource HighHighlightBrush}"/>
+                                                <Run Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=MessageSecondPart}"/>
+                                            </TextBlock>
                                         </Grid>
                                     </ScrollViewer>
                                     <Grid x:Name="CommandSpace" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Bottom">
