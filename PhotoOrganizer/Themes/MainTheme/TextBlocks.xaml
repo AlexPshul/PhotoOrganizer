@@ -15,6 +15,7 @@
     <Style TargetType="TextBlock" x:Key="TitleStyle" BasedOn="{StaticResource BaseTextBlockStyle}">
         <Setter Property="FontSize" Value="{StaticResource TitleFontSize}"/>
         <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="Foreground" Value="{StaticResource HighHighlightBrush}"/>
     </Style>
     
     <Style TargetType="TextBlock" x:Key="InListTextBlock">

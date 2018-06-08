@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:reactiveUi="using:ReactiveUI"
     mc:Ignorable="d"
     FontFamily="{StaticResource MainFont}"
     Background="{StaticResource MainBackgroundBrush}">
@@ -14,11 +15,49 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
 
-        <Border BorderThickness="0, 0, 0, 3" BorderBrush="{StaticResource HighHighlightBrush}">
-            <StackPanel Orientation="Horizontal">
-                <Image Source="../Assets/Square44x44Logo.scale-100.png"/>
-            </StackPanel>
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState x:Name="Active"/>
+                <VisualState x:Name="Inactive">
+                    <VisualState.Setters>
+                        <Setter Target="NameBorder.BorderBrush" Value="{StaticResource TitleBarInactiveBorderBrush}"/>
+                        <Setter Target="NameBorder.Background" Value="{StaticResource TitleBarInactiveInnerBackground}"/>
+                        <Setter Target="PhotoText.Foreground" Value="{StaticResource LowHighlightBrush}"/>
+                        <Setter Target="LogoImage.Opacity" Value="0.8"/>
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+
+        <Border x:Name="AppTitleBar" BorderThickness="0, 0, 0, 2" 
+                HorizontalAlignment="Stretch" Background="{StaticResource TitleBarMainBackground}">
+
+            <Grid ColumnSpacing="15">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Image x:Name="LogoImage" Source="../Assets/Square44x44Logo.scale-100.png" Margin="5, 5, 0, 0"/>
+                <Border x:Name="NameBorder" Height="30" VerticalAlignment="Top"
+                        BorderThickness="0, 0, 0, 2" Grid.Column="1"
+                        BorderBrush="{StaticResource TitleBarActiveBorderBrush}"
+                        Background="{StaticResource TitleBarActiveInnerBackground}">
+                    <StackPanel Orientation="Horizontal" Margin="5, 0">
+                        <TextBlock x:Name="PhotoText"
+                                   Text="Photo" VerticalAlignment="Bottom"
+                                   FontFamily="{StaticResource MainFont}" 
+                                   Foreground="{StaticResource HighHighlightBrush}"
+                                   FontSize="{StaticResource TitleBarLargeFontSize}"/>
+                        <TextBlock Text="Organizer" VerticalAlignment="Bottom"
+                                   FontFamily="{StaticResource MainFont}" 
+                                   Foreground="{StaticResource MainForegroundBrush}"
+                                   FontSize="{StaticResource TitleBarSmallFontSize}"/>
+                    </StackPanel>
+                </Border>
+            </Grid>
         </Border>
+
+        <reactiveUi:ViewModelViewHost Grid.Row="1" ViewModel="{x:Bind MainViewModel}"/>
 
     </Grid>
 

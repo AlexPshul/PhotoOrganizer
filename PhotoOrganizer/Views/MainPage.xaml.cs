@@ -1,4 +1,8 @@
-﻿using Windows.UI.Xaml.Controls;
+﻿using System;
+using Windows.ApplicationModel.Core;
+using Windows.UI.Core;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 using PhotoOrganizer.ViewModels;
 using ReactiveUI;
 using Splat;
@@ -12,14 +16,24 @@ namespace PhotoOrganizer.Views
     /// </summary>
     public sealed partial class MainPage : Page
     {
+        public IMainViewModel MainViewModel { get; } = (IMainViewModel)Locator.Current.GetService(typeof(IMainViewModel));
+
         public MainPage()
         {
             InitializeComponent();
-            Loaded += (sender, args) =>
+
+            var coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
+            coreTitleBar.ExtendViewIntoTitleBar = true;
+            coreTitleBar.LayoutMetricsChanged += CoreTitleBarOnLayoutMetricsChanged;
+            
+            Window.Current.SetTitleBar(AppTitleBar);
+            Window.Current.Activated += (sender, args) =>
             {
-                IMainViewModel mainViewModel = (IMainViewModel)Locator.Current.GetService(typeof(IMainViewModel));
-                //Content = new ViewModelViewHost { ViewModel = mainViewModel };
+                string state = args.WindowActivationState == CoreWindowActivationState.Deactivated ? "Inactive" : "Active";
+                VisualStateManager.GoToState(this, state, false);
             };
         }
+
+        private void CoreTitleBarOnLayoutMetricsChanged(CoreApplicationViewTitleBar sender, object args) => NameBorder.Height = sender.Height + 2;
     }
 }

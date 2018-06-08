@@ -22,4 +22,19 @@
     
     <SolidColorBrush x:Key="FullAccentBrush" Color="{StaticResource FullAccentColor}"/>
 
+    <SolidColorBrush x:Key="TitleBarMainBackground" Color="{StaticResource MainBackgroundColorHigh}"/>
+    <LinearGradientBrush x:Key="TitleBarActiveInnerBackground" StartPoint="0.7, .5" EndPoint="0.925, .5">
+        <GradientStop Color="{StaticResource MainBackgroundColorHigh}" Offset="0"/>
+        <GradientStop Color="{StaticResource HalfAccentColor}" Offset="1"/>
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="TitleBarActiveBorderBrush" StartPoint="0, .5" EndPoint="0.9, .5">
+        <GradientStop Color="{StaticResource FullAccentColor}" Offset="0"/>
+        <GradientStop Color="{StaticResource HalfAccentColor}" Offset="1"/>
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="TitleBarInactiveInnerBackground" StartPoint="0.7, .5" EndPoint="0.925, .5">
+        <GradientStop Color="{StaticResource MainBackgroundColorHigh}" Offset="0"/>
+        <GradientStop Color="{StaticResource SmallAccentColor}" Offset="1"/>
+    </LinearGradientBrush>
+    <SolidColorBrush x:Key="TitleBarInactiveBorderBrush" Color="{StaticResource SmallAccentColor}"/>
+
 </ResourceDictionary>
