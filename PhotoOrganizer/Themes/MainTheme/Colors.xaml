@@ -1,7 +1,8 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-    <Color x:Key="MainBackgroundColor">#403F3F</Color>
+    <Color x:Key="MainBackgroundColorLow">#403F3F</Color>
+    <Color x:Key="MainBackgroundColorHigh">#030303</Color>
     <Color x:Key="SecondaryBackgroundColor">#706E6C</Color>
 
     <Color x:Key="MainForegroundColor">#EBE9E7</Color>

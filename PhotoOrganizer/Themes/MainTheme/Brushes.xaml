@@ -5,7 +5,10 @@
         <ResourceDictionary Source="Colors.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 
-    <SolidColorBrush x:Key="MainBackgroundBrush" Color="{StaticResource MainBackgroundColor}"/>
+    <LinearGradientBrush x:Key="MainBackgroundBrush" StartPoint=".5, 0" EndPoint=".5, 0.8">
+        <GradientStop Color="{StaticResource MainBackgroundColorHigh}" Offset="0"/>
+        <GradientStop Color="{StaticResource MainBackgroundColorLow}" Offset="1"/>
+    </LinearGradientBrush>
     <SolidColorBrush x:Key="SecondaryBackgroundBrush" Color="{StaticResource SecondaryBackgroundColor}"/>
 
     <SolidColorBrush x:Key="MainForegroundBrush" Color="{StaticResource MainForegroundColor}"/>
