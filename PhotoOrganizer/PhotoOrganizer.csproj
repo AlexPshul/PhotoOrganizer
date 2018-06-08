@@ -134,6 +134,8 @@
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
+    <Content Include="Assets\Album-large.scale-100.png" />
+    <Content Include="Assets\Album-large.scale-200.png" />
     <Content Include="Assets\Fonts\Good-Times.ttf" />
     <None Include="PhotoOrganizer_TemporaryKey.pfx" />
     <PRIResource Include="Text\Strings.resw" />
