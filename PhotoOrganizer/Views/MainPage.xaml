@@ -6,4 +6,20 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     FontFamily="{StaticResource MainFont}"
-    Background="{StaticResource MainBackgroundBrush}"/>
+    Background="{StaticResource MainBackgroundBrush}">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <Border BorderThickness="0, 0, 0, 3" BorderBrush="{StaticResource HighHighlightBrush}">
+            <StackPanel Orientation="Horizontal">
+                <Image Source="../Assets/Square44x44Logo.scale-100.png"/>
+            </StackPanel>
+        </Border>
+
+    </Grid>
+
+</Page>

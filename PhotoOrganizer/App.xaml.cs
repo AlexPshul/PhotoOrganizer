@@ -6,6 +6,7 @@ using Windows.UI;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using PhotoOrganizer.Infrastructure;
 using PhotoOrganizer.UIInfrastructure;
@@ -89,23 +90,23 @@ namespace PhotoOrganizer
 
         private void InitializeTitleBar()
         {
-            var titleBar = ApplicationView.GetForCurrentView().TitleBar;
+            //var titleBar = ApplicationView.GetForCurrentView().TitleBar;
 
-            // Set active window colors
-            titleBar.ForegroundColor = Resources["SecondaryForegroundColor"] as Color?;
-            titleBar.BackgroundColor = Resources["HalfAccentColor"] as Color?;
-            titleBar.ButtonForegroundColor = Resources["SecondaryForegroundColor"] as Color?;
-            titleBar.ButtonBackgroundColor = Resources["HalfAccentColor"] as Color?;
-            titleBar.ButtonHoverForegroundColor = Resources["SecondaryForegroundColor"] as Color?;
-            titleBar.ButtonHoverBackgroundColor = Resources["FullAccentColor"] as Color?;
-            titleBar.ButtonPressedForegroundColor = Resources["SecondaryForegroundColor"] as Color?;
-            titleBar.ButtonPressedBackgroundColor = Resources["FullAccentColor"] as Color?;
+            //// Set active window colors
+            //titleBar.ForegroundColor = Resources["SecondaryForegroundColor"] as Color?;
+            //titleBar.BackgroundColor = Resources["HalfAccentColor"] as Color?;
+            //titleBar.ButtonForegroundColor = Resources["SecondaryForegroundColor"] as Color?;
+            //titleBar.ButtonBackgroundColor = Resources["HalfAccentColor"] as Color?;
+            //titleBar.ButtonHoverForegroundColor = Resources["SecondaryForegroundColor"] as Color?;
+            //titleBar.ButtonHoverBackgroundColor = Resources["FullAccentColor"] as Color?;
+            //titleBar.ButtonPressedForegroundColor = Resources["SecondaryForegroundColor"] as Color?;
+            //titleBar.ButtonPressedBackgroundColor = Resources["FullAccentColor"] as Color?;
 
-            // Set inactive window colors
-            titleBar.InactiveForegroundColor = Resources["SecondaryForegroundColor"] as Color?;
-            titleBar.InactiveBackgroundColor = Resources["SmallAccentColor"] as Color?;
-            titleBar.ButtonInactiveForegroundColor = Resources["SecondaryForegroundColor"] as Color?;
-            titleBar.ButtonInactiveBackgroundColor = Resources["SmallAccentColor"] as Color?;
+            //// Set inactive window colors
+            //titleBar.InactiveForegroundColor = Resources["SecondaryForegroundColor"] as Color?;
+            //titleBar.InactiveBackgroundColor = Resources["SmallAccentColor"] as Color?;
+            //titleBar.ButtonInactiveForegroundColor = Resources["SecondaryForegroundColor"] as Color?;
+            //titleBar.ButtonInactiveBackgroundColor = Resources["SmallAccentColor"] as Color?;
         }
 
         private void InitializeThemeColors()

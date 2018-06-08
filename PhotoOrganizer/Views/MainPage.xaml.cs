@@ -18,7 +18,7 @@ namespace PhotoOrganizer.Views
             Loaded += (sender, args) =>
             {
                 IMainViewModel mainViewModel = (IMainViewModel)Locator.Current.GetService(typeof(IMainViewModel));
-                Content = new ViewModelViewHost { ViewModel = mainViewModel };
+                //Content = new ViewModelViewHost { ViewModel = mainViewModel };
             };
         }
     }
