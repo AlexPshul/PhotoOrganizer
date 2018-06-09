@@ -5,4 +5,18 @@
         <ResourceDictionary Source="Brushes.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 
+    <Style TargetType="ListView" x:Key="ImageThumbnailStyle">
+        <Setter Property="Margin" Value="0, 0, 0, 0"/>
+        <Setter Property="ItemContainerStyle">
+            <Setter.Value>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="Margin" Value="0, 0, 15, 0"/>
+                    <Setter Property="Padding" Value="5, 0"/>
+                    <Setter Property="BorderThickness" Value="0, 0, 0, 1"/>
+                    <Setter Property="BorderBrush" Value="{StaticResource LowHighlightBrush}"/>
+                </Style>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
 </ResourceDictionary>

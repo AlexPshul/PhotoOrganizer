@@ -4,8 +4,10 @@ using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
+using System.Threading.Tasks;
 using PhotoOrganizer.Business.Interfaces;
 using PhotoOrganizer.Business.Models;
+using PhotoOrganizer.Infrastructure;
 using PhotoOrganizer.UIInfrastructure;
 using ReactiveUI;
 
@@ -16,6 +18,7 @@ namespace PhotoOrganizer.ViewModels
         #region Private Members
 
         private readonly ICurrentAlbumManager _currentAlbumManager;
+        private readonly IAlbumFolderViewModelFactory _albumFolderViewModelFactory;
 
         #endregion
 
@@ -24,29 +27,38 @@ namespace PhotoOrganizer.ViewModels
         public ViewModelActivator Activator { get; } = new ViewModelActivator();
 
         public ReactiveCommand CloseAlbumCommand { get; }
-        public ReactiveCommand<Unit, IReadOnlyCollection<AlbumFolder>> FetchAlbumDataCommand { get; }
+        public ReactiveCommand<Unit, IReadOnlyCollection<IAlbumFolderViewModel>> FetchAlbumDataCommand { get; }
         
         private readonly ObservableAsPropertyHelper<bool> _isFetchingPhotosHelper;
         public bool IsFetchingPhotos => _isFetchingPhotosHelper?.Value ?? false;
 
-        private readonly ObservableAsPropertyHelper<IReadOnlyCollection<string>> _allPhotosHelper;
-        public IReadOnlyCollection<string> AllPhotos => _allPhotosHelper?.Value;
+        private readonly ObservableAsPropertyHelper<IReadOnlyCollection<IAlbumFolderViewModel>> _allPhotosHelper;
+        public IReadOnlyCollection<IAlbumFolderViewModel> AllPhotos => _allPhotosHelper?.Value;
 
         #endregion
 
         #region Constructors
 
-        public AlbumViewModel(ICurrentAlbumManager currentAlbumManager)
+        public AlbumViewModel(ICurrentAlbumManager currentAlbumManager, IAlbumFolderViewModelFactory albumFolderViewModelFactory)
         {
             _currentAlbumManager = currentAlbumManager;
-            FetchAlbumDataCommand = ReactiveCommand.CreateFromTask(_currentAlbumManager.GetAllAlbumFolders);
+            _albumFolderViewModelFactory = albumFolderViewModelFactory;
+
+            FetchAlbumDataCommand = ReactiveCommand.CreateFromTask(FetchAlbumFolders);
             _isFetchingPhotosHelper = FetchAlbumDataCommand.IsExecuting.ToProperty(this, self => self.IsFetchingPhotos);
-            _allPhotosHelper = FetchAlbumDataCommand.Execute()
-                .SelectMany(albumFolders => albumFolders
-                    .Select(folder => folder.Images))
-                .ToProperty(this, self => self.AllPhotos);
+            _allPhotosHelper = FetchAlbumDataCommand.Execute().ToProperty(this, self => self.AllPhotos);
 
             CloseAlbumCommand = ReactiveCommand.Create(() => _currentAlbumManager.CloseCurrentAlbum());
+        }
+
+        #endregion
+
+        #region Private Methods
+
+        private async Task<IReadOnlyCollection<IAlbumFolderViewModel>> FetchAlbumFolders()
+        {
+            IReadOnlyCollection<AlbumFolder> albumFolders = await _currentAlbumManager.GetAllAlbumFolders();
+            return await albumFolders.Select(_albumFolderViewModelFactory.Create).AwaitAll();
         }
 
         #endregion

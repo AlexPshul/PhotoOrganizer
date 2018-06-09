@@ -2,6 +2,7 @@
 using Autofac;
 using PhotoOrganizer.Infrastructure;
 using PhotoOrganizer.UIInfrastructure;
+using PhotoOrganizer.ViewModels;
 using ReactiveUI;
 
 namespace PhotoOrganizer
@@ -22,6 +23,8 @@ namespace PhotoOrganizer
                 .Where(type => type.GetInterfaces()
                     .Any(interfaceType => interfaceType.Name.StartsWith("I") && interfaceType.Name.EndsWith("ViewModel")))
                 .ForEach(type => builder.RegisterType(type).AsImplementedInterfaces());
+
+            builder.RegisterType<AlbumFolderViewModel.Factory>().As<IAlbumFolderViewModelFactory>().SingleInstance();
         }
     }
 }

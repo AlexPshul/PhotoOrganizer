@@ -106,8 +106,11 @@
     <Compile Include="UIInfrastructure\CustomViewLocator.cs" />
     <Compile Include="UIInfrastructure\ReactiveUIExtensions.cs" />
     <Compile Include="Text\StringsReader.cs" />
+    <Compile Include="ViewModels\AlbumFolderViewModel.cs" />
     <Compile Include="ViewModels\AlbumSelectViewModel.cs" />
     <Compile Include="ViewModels\AlbumViewModel.cs" />
+    <Compile Include="ViewModels\IAlbumFolderViewModel.cs" />
+    <Compile Include="ViewModels\IAlbumFolderViewModelFactory.cs" />
     <Compile Include="ViewModels\IAlbumSelectViewModel.cs" />
     <Compile Include="ViewModels\IAlbumViewModel.cs" />
     <Compile Include="ViewModels\INewAlbumViewModel.cs" />
