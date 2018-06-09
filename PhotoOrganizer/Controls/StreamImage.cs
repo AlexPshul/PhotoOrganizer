@@ -25,6 +25,7 @@ namespace PhotoOrganizer.Controls
     {
         #region Private Members
 
+        private IDisposable _eventSubscriptions;
         private readonly Subject<Unit> _sourceUpdatedSubject = new Subject<Unit>();
 
         #endregion
@@ -77,11 +78,16 @@ namespace PhotoOrganizer.Controls
                     ReloadImage();
             };
 
-            _sourceUpdatedSubject
-                .Do(_ => Image.Source = null)
-                .Throttle(TimeSpan.FromMilliseconds(250))
-                .ObserveOnDispatcher()
-                .Subscribe(_ => ReloadImage());
+            Loaded += (sender, args) =>
+            {
+                _eventSubscriptions = _sourceUpdatedSubject
+                    .Do(_ => Image.Source = null)
+                    .Throttle(TimeSpan.FromMilliseconds(250))
+                    .ObserveOnDispatcher()
+                    .Subscribe(_ => ReloadImage());
+            };
+
+            Unloaded += (sender, args) => _eventSubscriptions?.Dispose();
         }
 
         #endregion
