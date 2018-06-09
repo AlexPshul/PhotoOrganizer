@@ -98,8 +98,10 @@
     <Compile Include="BehaviorActions\FocusAction.cs" />
     <Compile Include="BehaviorActions\ItemDoubleTapExecuteCommandAction.cs" />
     <Compile Include="Controls\CustomContentDialog.cs" />
+    <Compile Include="Controls\StreamImage.cs" />
     <Compile Include="Converters\AnythingToUnitConverter.cs" />
     <Compile Include="Converters\InvertBooleanConverter.cs" />
+    <Compile Include="Converters\StringToImageSourceConverter.cs" />
     <Compile Include="UIInfrastructure\AutofacMutableDependencyResolver.cs" />
     <Compile Include="UIInfrastructure\CustomViewLocator.cs" />
     <Compile Include="UIInfrastructure\ReactiveUIExtensions.cs" />
@@ -174,6 +176,10 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Page Include="Converters\ConvertersBundle.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\Generic.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

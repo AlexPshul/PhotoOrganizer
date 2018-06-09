@@ -4,5 +4,6 @@
     
     <converters:AnythingToUnitConverter x:Key="AnythingToUnitConverter"/>
     <converters:InvertBooleanConverter x:Key="InvertBooleanConverter"/>
+    <converters:StringToImageSourceConverter x:Key="StringToImageSourceConverter"/>
 
 </ResourceDictionary>

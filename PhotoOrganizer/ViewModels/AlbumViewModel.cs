@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
@@ -20,24 +21,16 @@ namespace PhotoOrganizer.ViewModels
 
         #region Properties
 
-        private string _albumName;
-        public string AlbumName
-        {
-            get => _albumName;
-            set => this.RaiseAndSetIfChanged(ref _albumName, value);
-        }
-
-        private ObservableAsPropertyHelper<string> _numberOfPhotosHelper;
-        public string NumberOfPhotos => _numberOfPhotosHelper?.Value ?? string.Empty;
-        
-        public ReactiveCommand CloseAlbumCommand { get; }
-
         public ViewModelActivator Activator { get; } = new ViewModelActivator();
 
-        public ReactiveCommand<Unit, IReadOnlyCollection<AlbumFolder>> FetchAlbumData { get; }
-
+        public ReactiveCommand CloseAlbumCommand { get; }
+        public ReactiveCommand<Unit, IReadOnlyCollection<AlbumFolder>> FetchAlbumDataCommand { get; }
+        
         private readonly ObservableAsPropertyHelper<bool> _isFetchingPhotosHelper;
         public bool IsFetchingPhotos => _isFetchingPhotosHelper?.Value ?? false;
+
+        private readonly ObservableAsPropertyHelper<IReadOnlyCollection<string>> _allPhotosHelper;
+        public IReadOnlyCollection<string> AllPhotos => _allPhotosHelper?.Value;
 
         #endregion
 
@@ -46,18 +39,12 @@ namespace PhotoOrganizer.ViewModels
         public AlbumViewModel(ICurrentAlbumManager currentAlbumManager)
         {
             _currentAlbumManager = currentAlbumManager;
-            FetchAlbumData = ReactiveCommand.CreateFromTask(_currentAlbumManager.GetAllAlbumFolders);
-            _isFetchingPhotosHelper = FetchAlbumData.IsExecuting.ToProperty(this, self => self.IsFetchingPhotos);
-
-            this.WhenActivated(() =>
-            {
-                AlbumName = _currentAlbumManager.CurrentAlbum.Name;
-                _numberOfPhotosHelper = FetchAlbumData.Execute()
-                    .Select(albumData => albumData
-                        .Sum(folder => folder.Images.Count))
-                    .Select(numberOfPhotos => $"Total photos: {numberOfPhotos}")
-                    .ToProperty(this, self => self.NumberOfPhotos);
-            });
+            FetchAlbumDataCommand = ReactiveCommand.CreateFromTask(_currentAlbumManager.GetAllAlbumFolders);
+            _isFetchingPhotosHelper = FetchAlbumDataCommand.IsExecuting.ToProperty(this, self => self.IsFetchingPhotos);
+            _allPhotosHelper = FetchAlbumDataCommand.Execute()
+                .SelectMany(albumFolders => albumFolders
+                    .Select(folder => folder.Images))
+                .ToProperty(this, self => self.AllPhotos);
 
             CloseAlbumCommand = ReactiveCommand.Create(() => _currentAlbumManager.CloseCurrentAlbum());
         }
