@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive;
+using System.Reactive.Linq;
+using System.Reactive.Subjects;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Storage;
@@ -20,6 +23,12 @@ namespace PhotoOrganizer.Controls
 {
     public sealed class StreamImage : Control
     {
+        #region Private Members
+
+        private readonly Subject<Unit> _sourceUpdatedSubject = new Subject<Unit>();
+
+        #endregion
+
         #region Properties
 
         public Image Image { get; private set; }
@@ -61,19 +70,18 @@ namespace PhotoOrganizer.Controls
         public StreamImage()
         {
             DefaultStyleKey = typeof(StreamImage);
-            Loaded += (sender, args) =>
-            {
-                
-            };
 
             SizeChanged += (sender, args) =>
             {
-                Size argsNewSize = args.NewSize;
-                Size prevSize = args.PreviousSize;
-
-                if (prevSize != Size.Empty)
+                if (args.PreviousSize != Size.Empty)
                     ReloadImage();
             };
+
+            _sourceUpdatedSubject
+                .Do(_ => Image.Source = null)
+                .Throttle(TimeSpan.FromMilliseconds(250))
+                .ObserveOnDispatcher()
+                .Subscribe(_ => ReloadImage());
         }
 
         #endregion
@@ -98,15 +106,18 @@ namespace PhotoOrganizer.Controls
 
         #region Private Methods
 
-        private static void ReloadImage(DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as StreamImage)?.ReloadImage();
+        private static void ReloadImage(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            StreamImage sender = d as StreamImage;
+            sender?._sourceUpdatedSubject.OnNext(Unit.Default);
+        }
 
         private async void ReloadImage()
         {
+            Image.Source = null;
             if (!_isLoaded || Image == null || Source == null)
                 return;
-
-            Image.Source = null;
-
+            
             using (DisposableExtensions.Create(() => IsLoading = true, () => IsLoading = false))
             using (IRandomAccessStream stream = await FileRandomAccessStream.OpenAsync(Source, FileAccessMode.Read))
             {

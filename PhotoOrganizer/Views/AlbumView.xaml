@@ -60,7 +60,7 @@
                 <VisualState x:Name="FetchingData">
                     <VisualState.Setters>
                         <Setter Target="ProgressRing.IsActive" Value="True"/>
-                        <Setter Target="LoadingMessage.Text" Value="Fetching Photos"/>
+                        <Setter Target="LoadingMessage.Text" Value="{Binding Source={StaticResource Strings}, Path=[Title_FetchingPhotos]}"/>
                     </VisualState.Setters>
 
                 </VisualState>
@@ -68,6 +68,7 @@
         </VisualStateManager.VisualStateGroups>
 
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
             <RowDefinition/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
@@ -81,8 +82,8 @@
             <TextBlock x:Name="LoadingMessage" Style="{StaticResource TitleStyle}"/>
         </StackPanel>
 
-        <ListView x:Name="MyList" 
-                  Grid.Column="0" Grid.Row="0" Grid.RowSpan="2"
+        <ListView x:Name="ImagesList" 
+                  Grid.Column="0" Grid.Row="1" Grid.RowSpan="2"
                   Style="{StaticResource ImageThumbnailStyle}"
                   ItemsSource="{Binding Source={StaticResource AllPhotosCollection}}">
             <ListView.GroupStyle>
@@ -97,7 +98,39 @@
             </ListView.ItemTemplate>
         </ListView>
 
-        <controls:StreamImage Grid.Row="0" Grid.Column="1" Source="{Binding ElementName=MyList, Path=SelectedItem}"/>
+        <controls:StreamImage Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" Source="{Binding ElementName=ImagesList, Path=SelectedItem}"/>
+
+        <Border Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" 
+                HorizontalAlignment="Left" Padding="0, 0, 15, 0"
+                Background="{StaticResource TransparentMainBackgroundBrush}">
+            <Grid Margin="20, 0, 0, 15" ColumnSpacing="15">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                
+                <Button Grid.RowSpan="2"
+                        Style="{StaticResource TransparentButton}"
+                        Foreground="{StaticResource HighHighlightBrush}"
+                        Command="{Binding CloseAlbumCommand}">
+                    <SymbolIcon Symbol="Back" />
+                </Button>
+
+                <TextBlock Grid.Column="1" Grid.Row="0"
+                           Text="{Binding Album.Name}"
+                           Style="{StaticResource TitleStyle}"/>
+                <TextBlock Text="{Binding Album.Source}"
+                           Style="{StaticResource BaseTextBlockStyle}"
+                           Margin="5, 0"
+                           Grid.Row="1"
+                           Grid.Column="1"/>
+            </Grid>
+        </Border>
+
 
     </Grid>
 

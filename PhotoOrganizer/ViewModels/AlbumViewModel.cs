@@ -35,6 +35,8 @@ namespace PhotoOrganizer.ViewModels
         private readonly ObservableAsPropertyHelper<IReadOnlyCollection<IAlbumFolderViewModel>> _allPhotosHelper;
         public IReadOnlyCollection<IAlbumFolderViewModel> AllPhotos => _allPhotosHelper?.Value;
 
+        public Album Album => _currentAlbumManager.CurrentAlbum;
+
         #endregion
 
         #region Constructors

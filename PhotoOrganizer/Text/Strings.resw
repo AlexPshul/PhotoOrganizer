@@ -151,6 +151,9 @@
   <data name="Title_DeleteAlbum" xml:space="preserve">
     <value>Delete Album</value>
   </data>
+  <data name="Title_FetchingPhotos" xml:space="preserve">
+    <value>Fetching Photos...</value>
+  </data>
   <data name="Title_NewAlbumBaseName" xml:space="preserve">
     <value>My New Album</value>
   </data>
