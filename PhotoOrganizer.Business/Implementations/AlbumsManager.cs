@@ -11,10 +11,20 @@ namespace PhotoOrganizer.Business.Implementations
 {
     internal class AlbumsManager : IAlbumsManager
     {
+        #region Consts
+
         private const string AlbumsGroup = "Albums";
+
+        #endregion
+
+        #region Private Members
 
         private readonly ILocalStorageService _localStorageService;
         private readonly IFileSystemService _fileSystemService;
+
+        #endregion
+
+        #region Constructors
 
         public AlbumsManager(ILocalStorageService localStorageService, IFileSystemService fileSystemService)
         {
@@ -22,24 +32,33 @@ namespace PhotoOrganizer.Business.Implementations
             _fileSystemService = fileSystemService;
         }
 
+        #endregion
+
+        #region Public Methods
+
         public Task<bool> DoesAlbumSourceExists(string albumPath) => _fileSystemService.DoesDirectoryExists(albumPath);
 
         public Task<bool> IsValidDestinationForAlbum(string destinationPath) => _fileSystemService.IsValidDirectory(destinationPath);
 
-        public Task<IReadOnlyCollection<string>> GetAvailableAlbums() => _localStorageService.GetAvailableKeys(AlbumsGroup);
+        public async Task<IReadOnlyCollection<Album>> GetAvailableAlbums()
+        {
+            IReadOnlyCollection<string> availableAlbums = await _localStorageService.GetAvailableKeys(AlbumsGroup);
+            return await availableAlbums.Select(GetAlbum).AwaitAll();
+        }
+        
         public async Task<bool> IsAlbumNameTaken(string albumName)
         {
-            IReadOnlyCollection<string> availableAlbums = await GetAvailableAlbums();
+            IReadOnlyCollection<string> availableAlbums = await _localStorageService.GetAvailableKeys(AlbumsGroup);
             return availableAlbums.Contains(albumName ?? "");
         }
 
         public async Task<string> GetNextAvailableAlbumName(string baseName)
         {
-            IReadOnlyCollection<string> availableAlbums = await GetAvailableAlbums();
+            IReadOnlyCollection<string> availableAlbums = await _localStorageService.GetAvailableKeys(AlbumsGroup);
 
             string availableName = baseName;
             bool isNameAvailable = availableAlbums.All(albumName => albumName != availableName);
-            
+
             int serialNumber = 2;
             while (!isNameAvailable)
             {
@@ -65,5 +84,7 @@ namespace PhotoOrganizer.Business.Implementations
         }
 
         public Task DeleteAlbum(string name) => _localStorageService.DeleteString(AlbumsGroup, name);
+
+        #endregion
     }
 }

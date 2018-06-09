@@ -1,7 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
+using Windows.Storage.Search;
+using PhotoOrganizer.Infrastructure;
+using PhotoOrganizer.Services.DataObjects;
 using PhotoOrganizer.Services.Interfaces;
 
 namespace PhotoOrganizer.WindowsServices.Implementations
@@ -34,6 +40,45 @@ namespace PhotoOrganizer.WindowsServices.Implementations
             {
                 return false;
             }
+        }
+
+        public async Task<IReadOnlyCollection<FolderData>> GetAllFoldersData(string fullPath, IReadOnlyCollection<string> foldersToIgnore = null, params string[] formats)
+        {
+            try
+            {
+
+                if (!await DoesDirectoryExists(fullPath))
+                    return Enumerable.Empty<FolderData>().ToReadOnlyCollection();
+
+                StorageFolder requestedFolder = await StorageFolder.GetFolderFromPathAsync(fullPath);
+                HashSet<string> formatsHashSet = new HashSet<string>(formats ?? Enumerable.Empty<string>());
+                return await GetAllFoldersData(requestedFolder, foldersToIgnore ?? new ReadOnlyCollection<string>(new string[0]), formatsHashSet);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+
+            return new List<FolderData>();
+        }
+
+        private async Task<IReadOnlyCollection<FolderData>> GetAllFoldersData(StorageFolder storageFolder, IReadOnlyCollection<string> foldersToIgnore, HashSet<string> formats)
+        {
+            Task<IReadOnlyList<StorageFile>> folderFilesTask = storageFolder.GetFilesAsync(CommonFileQuery.DefaultQuery).AsTask();
+
+            IReadOnlyList<StorageFolder> subFolders = await storageFolder.GetFoldersAsync();
+            IEnumerable<StorageFolder> relevantSubFolders = subFolders.Where(folder => !foldersToIgnore.Contains(folder.Name));
+
+            Task<IReadOnlyCollection<FolderData>[]> subFoldersDataTasks = relevantSubFolders.Select(subFolder => GetAllFoldersData(subFolder, foldersToIgnore, formats)).AwaitAll();
+
+            IReadOnlyList<StorageFile> folderFiles = await folderFilesTask;
+            IEnumerable<string> filteredFiles = folderFiles.Where(file => !formats.Any() || formats.Contains(file.FileType.ToLower())).Select(file => file.Path);
+
+            FolderData currentFolderData = new FolderData(storageFolder.Path, filteredFiles);
+
+            IReadOnlyCollection<FolderData>[] subFoldersData = await subFoldersDataTasks;
+
+            return currentFolderData.Concat(subFoldersData.Flatten()).ToReadOnlyCollection();
         }
     }
 }

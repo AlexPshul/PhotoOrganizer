@@ -1,4 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using PhotoOrganizer.Services.DataObjects;
 
 namespace PhotoOrganizer.Services.Interfaces
 {
@@ -6,5 +9,7 @@ namespace PhotoOrganizer.Services.Interfaces
     {
         Task<bool> DoesDirectoryExists(string path);
         Task<bool> IsValidDirectory(string destinationPath);
+
+        Task<IReadOnlyCollection<FolderData>> GetAllFoldersData(string fullPath, IReadOnlyCollection<string> foldersToIgnore = null, params string[] formats);
     }
 }

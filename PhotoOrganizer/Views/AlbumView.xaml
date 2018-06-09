@@ -11,10 +11,16 @@
     d:DesignWidth="400"
     d:DataContext="{d:DesignInstance viewModels:AlbumViewModel}">
 
-    <StackPanel HorizontalAlignment="Center">
-        <TextBlock Text="{Binding AlbumName}" Style="{StaticResource TitleStyle}" HorizontalAlignment="Center"/>
-        <Button Content="CLOSE" Style="{StaticResource MainButtonStyle}" FontSize="30" HorizontalAlignment="Center"
-                Command="{Binding CloseAlbumCommand}"/>
-    </StackPanel>
+    <Grid>
+
+        <TextBlock Text="{Binding NumberOfPhotos}" Style="{StaticResource TitleStyle}" VerticalAlignment="Top" Margin="40"/>
+
+        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+            <ProgressRing IsActive="{Binding IsFetchingPhotos}" Foreground="{StaticResource HighHighlightBrush}"
+                          Style="{StaticResource HugeProgressRingStyle}"/>
+            <TextBlock Text="Fetching Photos" Style="{StaticResource TitleStyle}" Visibility="{Binding IsFetchingPhotos}"/>
+        </StackPanel>
+
+    </Grid>
 
 </UserControl>

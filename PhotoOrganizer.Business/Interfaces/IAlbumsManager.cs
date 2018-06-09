@@ -9,7 +9,7 @@ namespace PhotoOrganizer.Business.Interfaces
         Task<bool> DoesAlbumSourceExists(string albumPath);
         Task<bool> IsValidDestinationForAlbum(string destinationPath);
 
-        Task<IReadOnlyCollection<string>> GetAvailableAlbums();
+        Task<IReadOnlyCollection<Album>> GetAvailableAlbums();
         Task<bool> IsAlbumNameTaken(string albumName);
         Task<string> GetNextAvailableAlbumName(string baseName);
         Task CreateAlbum(Album album);

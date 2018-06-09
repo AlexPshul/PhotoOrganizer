@@ -18,11 +18,21 @@
         <Setter Property="Foreground" Value="{StaticResource HighHighlightBrush}"/>
     </Style>
     
-    <Style TargetType="TextBlock" x:Key="InListTextBlock">
-        <Setter Property="FontWeight" Value="Bold"/>
+    <Style TargetType="TextBlock" x:Key="BaseListTextBlock">
         <Setter Property="FontFamily" Value="{StaticResource MainFont}"/>
     </Style>
-    
+
+    <Style TargetType="TextBlock" x:Key="InListTextBlock" BasedOn="{StaticResource BaseListTextBlock}">
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="FontSize" Value="20"/>
+    </Style>
+
+    <Style TargetType="TextBlock" x:Key="InListSecondaryTextBlock" BasedOn="{StaticResource InListTextBlock}">
+        <Setter Property="FontWeight" Value="Normal"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="Opacity" Value="0.8"/>
+    </Style>
+
     <Style TargetType="TextBlock" x:Key="CommentTextBlock" BasedOn="{StaticResource BaseTextBlockStyle}">
         <Setter Property="FontSize" Value="{StaticResource CommentFontSize}"/>
         <Setter Property="Foreground" Value="{StaticResource HighHighlightBrush}"/>

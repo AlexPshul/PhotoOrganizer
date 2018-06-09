@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Reactive;
+using System.Threading.Tasks;
 using PhotoOrganizer.Business.Models;
 
 namespace PhotoOrganizer.Business.Interfaces
@@ -13,5 +15,7 @@ namespace PhotoOrganizer.Business.Interfaces
 
         void OpenAlbum(Album album);
         void CloseCurrentAlbum();
+
+        Task<IReadOnlyCollection<AlbumFolder>> GetAllAlbumFolders();
     }
 }
