@@ -10,6 +10,7 @@
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:controls="using:PhotoOrganizer.Controls"
+    xmlns:reactiveUi="using:ReactiveUI"
     mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="400"
@@ -43,7 +44,7 @@
 
     </UserControl.Resources>
 
-    <Grid Margin="0, 10">
+    <Grid Margin="0, 11">
 
         <interactivity:Interaction.Behaviors>
             <core:DataTriggerBehavior Binding="{Binding IsFetchingPhotos}" Value="True">
@@ -70,10 +71,9 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition/>
-            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="226"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
 
@@ -83,7 +83,7 @@
         </StackPanel>
 
         <ListView x:Name="ImagesList" 
-                  Grid.Column="0" Grid.Row="1" Grid.RowSpan="2"
+                  Grid.Column="0" Grid.Row="1"
                   Style="{StaticResource ImageThumbnailStyle}"
                   ItemsSource="{Binding Source={StaticResource AllPhotosCollection}}">
             <ListView.GroupStyle>
@@ -102,7 +102,7 @@
 
         <Border Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" 
                 HorizontalAlignment="Left" Padding="0, 0, 15, 0"
-                Background="{StaticResource TransparentMainBackgroundBrush}">
+                Background="{StaticResource TransparentHighMainBackgroundBrush}">
             <Grid Margin="20, 0, 0, 15" ColumnSpacing="15">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -115,7 +115,6 @@
                 
                 <Button Grid.RowSpan="2"
                         Style="{StaticResource TransparentButton}"
-                        Foreground="{StaticResource HighHighlightBrush}"
                         Command="{Binding CloseAlbumCommand}">
                     <SymbolIcon Symbol="Back" />
                 </Button>
@@ -131,6 +130,10 @@
             </Grid>
         </Border>
 
+        <Border Grid.Row="1" Grid.Column="1" VerticalAlignment="Bottom"
+                BorderBrush="{StaticResource LowHighlightBrush}" BorderThickness="0, 1, 0, 0">
+            <reactiveUi:ViewModelViewHost ViewModel="{Binding AlbumGroupsViewModel}"/>
+        </Border>
 
     </Grid>
 

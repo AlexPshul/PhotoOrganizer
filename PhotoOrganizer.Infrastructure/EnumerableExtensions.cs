@@ -18,6 +18,7 @@ namespace PhotoOrganizer.Infrastructure
         public static string JoinStrings(this IEnumerable<string> source, string separator) => string.Join(separator, source);
         public static Task<T[]> AwaitAll<T>(this IEnumerable<Task<T>> source) => Task.WhenAll(source);
         public static IEnumerable<T> Concat<T>(this T singleSource, IEnumerable<T> secondEnumerable) => new[] { singleSource }.Concat(secondEnumerable);
+        public static IEnumerable<T> Concat<T>(this IEnumerable<T> source, T singleItem) => source.Concat(new[] { singleItem });
         public static IEnumerable<T> Flatten<T>(this IEnumerable<IEnumerable<T>> source) => source.SelectMany(_ => _);
     }
 }

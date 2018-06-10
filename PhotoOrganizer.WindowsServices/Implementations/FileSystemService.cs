@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Search;
+using Windows.System;
 using PhotoOrganizer.Infrastructure;
 using PhotoOrganizer.Services.DataObjects;
 using PhotoOrganizer.Services.Interfaces;
@@ -40,6 +41,12 @@ namespace PhotoOrganizer.WindowsServices.Implementations
             {
                 return false;
             }
+        }
+
+        public async Task OpenDirectoryInExplorer(string fullPath)
+        {
+            StorageFolder folderToOpen = await StorageFolder.GetFolderFromPathAsync(fullPath);
+            await Launcher.LaunchFolderAsync(folderToOpen);
         }
 
         public async Task<IReadOnlyCollection<FolderData>> GetAllFoldersData(string fullPath, IReadOnlyCollection<string> foldersToIgnore = null, params string[] formats)

@@ -7,6 +7,8 @@
 
     <Style TargetType="ListView" x:Key="ImageThumbnailStyle">
         <Setter Property="Margin" Value="0, 0, 0, 0"/>
+        <Setter Property="BorderBrush" Value="{StaticResource MediumHighlightBrush}"/>
+        <Setter Property="BorderThickness" Value="0, 0, 1, 0"/>
         <Setter Property="ItemContainerStyle">
             <Setter.Value>
                 <Style TargetType="ListViewItem">

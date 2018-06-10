@@ -68,10 +68,11 @@ namespace PhotoOrganizer.Business.Implementations
 
         public void OpenAlbum(Album album) => CurrentAlbum = album;
         public void CloseCurrentAlbum() => CurrentAlbum = null;
+        public Task LaunchAlbumDestinationFolder() => _fileSystemService.OpenDirectoryInExplorer(CurrentAlbum.Destination);
 
         public async Task<IReadOnlyCollection<AlbumFolder>> GetAllAlbumFolders()
         {
-            IReadOnlyCollection<FolderData> albumDataFolders = await _fileSystemService.GetAllFoldersData(CurrentAlbum.Source, null, SupportedImageFormats);
+            IReadOnlyCollection<FolderData> albumDataFolders = await _fileSystemService.GetAllFoldersData(CurrentAlbum.Source, CurrentAlbum.SubFolders, SupportedImageFormats);
             return albumDataFolders.Select(dataFolder => new AlbumFolder(dataFolder.FullPath, dataFolder.Files)).ToReadOnlyCollection();
         }
 

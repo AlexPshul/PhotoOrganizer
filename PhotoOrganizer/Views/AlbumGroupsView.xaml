@@ -1,0 +1,73 @@
+﻿<UserControl
+    x:Name="AlbumGroupViewUserControl"
+    x:Class="PhotoOrganizer.Views.AlbumGroupsView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewModels="using:PhotoOrganizer.ViewModels"
+    xmlns:templateSelectors="using:PhotoOrganizer.TemplateSelectors"
+    mc:Ignorable="d"
+    d:DesignHeight="300"
+    d:DesignWidth="400"
+    d:DataContext="{d:DesignInstance viewModels:AlbumGroupsViewModel}">
+
+    <UserControl.Resources>
+
+        <DataTemplate x:Key="AddNewGroupTemplate">
+            <Button Style="{StaticResource TransparentButton}"
+                    Padding="5"
+                    Command="{Binding ElementName=AlbumGroupViewUserControl, Path=DataContext.OpenDestinationFolderCommand}">
+                <FontIcon Glyph="&#xECC8;" FontSize="65"/>
+            </Button>
+        </DataTemplate>
+
+        <DataTemplate x:Key="RegularGroupTemplate">
+            <TextBlock Text="{Binding}"
+                       Style="{StaticResource BaseTextBlockStyle}"
+                       FontSize="10"
+                       TextWrapping="Wrap" 
+                       HorizontalAlignment="Center" 
+                       VerticalAlignment="Center"/>
+        </DataTemplate>
+
+        <templateSelectors:AlbumGroupsTemplateSelector x:Key="AlbumGroupsTemplateSelector"
+                                                       AddNewGroupTemplate="{StaticResource AddNewGroupTemplate}"
+                                                       RegularGroupTemplate="{StaticResource RegularGroupTemplate}"/>
+
+    </UserControl.Resources>
+
+    <Grid Background="{StaticResource TransparentLowMainBackgroundBrush}" 
+          Padding="10" RowSpacing="15">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Orientation="Horizontal" Spacing="10">
+            <Button Style="{StaticResource TransparentButton}"
+                    Command="{Binding OpenDestinationFolderCommand}">
+                <FontIcon Glyph="&#xED43;"/>
+            </Button>
+            <TextBlock Text="{Binding Album.Destination}"
+                       Style="{StaticResource BaseTextBlockStyle}"
+                       VerticalAlignment="Center"/>
+        </StackPanel>
+
+        <ListView Grid.Row="1"
+                  ScrollViewer.VerticalScrollBarVisibility="Hidden"
+                  ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                  ScrollViewer.VerticalScrollMode="Disabled"
+                  ScrollViewer.HorizontalScrollMode="Enabled"
+                  ItemsSource="{Binding Groups}"
+                  SelectionMode="None"
+                  ItemTemplateSelector="{StaticResource AlbumGroupsTemplateSelector}">
+            <ListView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <ItemsStackPanel Orientation="Horizontal"/>
+                </ItemsPanelTemplate>
+            </ListView.ItemsPanel>
+        </ListView>
+    </Grid>
+
+</UserControl>

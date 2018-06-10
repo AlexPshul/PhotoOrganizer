@@ -10,6 +10,8 @@ namespace PhotoOrganizer.Services.Interfaces
         Task<bool> DoesDirectoryExists(string path);
         Task<bool> IsValidDirectory(string destinationPath);
 
+        Task OpenDirectoryInExplorer(string fullPath);
+
         Task<IReadOnlyCollection<FolderData>> GetAllFoldersData(string fullPath, IReadOnlyCollection<string> foldersToIgnore = null, params string[] formats);
     }
 }

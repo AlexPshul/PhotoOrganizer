@@ -16,6 +16,8 @@ namespace PhotoOrganizer.Business.Interfaces
         void OpenAlbum(Album album);
         void CloseCurrentAlbum();
 
+        Task LaunchAlbumDestinationFolder();
+
         Task<IReadOnlyCollection<AlbumFolder>> GetAllAlbumFolders();
     }
 }

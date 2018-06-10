@@ -9,7 +9,9 @@
         <GradientStop Color="{StaticResource MainBackgroundColorHigh}" Offset="0"/>
         <GradientStop Color="{StaticResource MainBackgroundColorLow}" Offset="1"/>
     </LinearGradientBrush>
-    <SolidColorBrush x:Key="TransparentMainBackgroundBrush" Color="{StaticResource MainBackgroundColorHigh}" Opacity=".5"/>
+
+    <SolidColorBrush x:Key="TransparentHighMainBackgroundBrush" Color="{StaticResource MainBackgroundColorHigh}" Opacity=".5"/>
+    <SolidColorBrush x:Key="TransparentLowMainBackgroundBrush" Color="{StaticResource MainBackgroundColorLow}" Opacity=".5"/>
 
     <SolidColorBrush x:Key="SecondaryBackgroundBrush" Color="{StaticResource SecondaryBackgroundColor}"/>
 

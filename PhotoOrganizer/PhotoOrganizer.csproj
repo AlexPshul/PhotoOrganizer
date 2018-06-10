@@ -102,21 +102,28 @@
     <Compile Include="Converters\AnythingToUnitConverter.cs" />
     <Compile Include="Converters\InvertBooleanConverter.cs" />
     <Compile Include="Converters\StringToImageSourceConverter.cs" />
+    <Compile Include="Converters\SubtractionConverter.cs" />
+    <Compile Include="TemplateSelectors\AlbumGroupsTemplateSelector.cs" />
     <Compile Include="UIInfrastructure\AutofacMutableDependencyResolver.cs" />
     <Compile Include="UIInfrastructure\CustomViewLocator.cs" />
     <Compile Include="UIInfrastructure\ReactiveUIExtensions.cs" />
     <Compile Include="Text\StringsReader.cs" />
     <Compile Include="ViewModels\AlbumFolderViewModel.cs" />
+    <Compile Include="ViewModels\AlbumGroupsViewModel.cs" />
     <Compile Include="ViewModels\AlbumSelectViewModel.cs" />
     <Compile Include="ViewModels\AlbumViewModel.cs" />
     <Compile Include="ViewModels\IAlbumFolderViewModel.cs" />
     <Compile Include="ViewModels\IAlbumFolderViewModelFactory.cs" />
+    <Compile Include="ViewModels\IAlbumGroupsViewModel.cs" />
     <Compile Include="ViewModels\IAlbumSelectViewModel.cs" />
     <Compile Include="ViewModels\IAlbumViewModel.cs" />
     <Compile Include="ViewModels\INewAlbumViewModel.cs" />
     <Compile Include="ViewModels\NewAlbumViewModel.cs" />
     <Compile Include="ViewModels\IMainViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
+    <Compile Include="Views\AlbumGroupsView.xaml.cs">
+      <DependentUpon>AlbumGroupsView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\AlbumSelectView.xaml.cs">
       <DependentUpon>AlbumSelectView.xaml</DependentUpon>
     </Compile>
@@ -234,6 +241,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Views\AlbumGroupsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\AlbumSelectView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -289,6 +300,7 @@
       <Name>Behaviors SDK %28XAML%29</Name>
     </SDKReference>
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

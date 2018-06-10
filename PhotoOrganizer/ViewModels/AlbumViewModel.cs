@@ -37,12 +37,15 @@ namespace PhotoOrganizer.ViewModels
 
         public Album Album => _currentAlbumManager.CurrentAlbum;
 
+        public IAlbumGroupsViewModel AlbumGroupsViewModel { get; }
+        
         #endregion
 
         #region Constructors
 
-        public AlbumViewModel(ICurrentAlbumManager currentAlbumManager, IAlbumFolderViewModelFactory albumFolderViewModelFactory)
+        public AlbumViewModel(ICurrentAlbumManager currentAlbumManager, IAlbumFolderViewModelFactory albumFolderViewModelFactory, IAlbumGroupsViewModel albumGroupsViewModel)
         {
+            AlbumGroupsViewModel = albumGroupsViewModel;
             _currentAlbumManager = currentAlbumManager;
             _albumFolderViewModelFactory = albumFolderViewModelFactory;
 
