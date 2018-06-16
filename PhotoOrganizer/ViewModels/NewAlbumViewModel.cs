@@ -7,6 +7,7 @@ using System.Reactive.Threading.Tasks;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.Storage;
+using Windows.Storage.AccessCache;
 using Windows.Storage.Pickers;
 using PhotoOrganizer.Business.Interfaces;
 using PhotoOrganizer.Business.Models;
@@ -210,6 +211,7 @@ namespace PhotoOrganizer.ViewModels
             };
 
             StorageFolder storageFolder = await folderPicker.PickSingleFolderAsync();
+            StorageApplicationPermissions.FutureAccessList.Add(storageFolder);
             return storageFolder?.Path ?? string.Empty;
         }
 
