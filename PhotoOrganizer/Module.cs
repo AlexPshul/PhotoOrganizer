@@ -25,6 +25,7 @@ namespace PhotoOrganizer
                 .ForEach(type => builder.RegisterType(type).AsImplementedInterfaces());
 
             builder.RegisterType<AlbumFolderViewModel.Factory>().As<IAlbumFolderViewModelFactory>().SingleInstance();
+            builder.RegisterType<GroupFolderViewModel.Factory>().As<IGroupFolderViewModelFactory>().SingleInstance();
         }
     }
 }

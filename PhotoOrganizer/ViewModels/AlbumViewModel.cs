@@ -43,9 +43,13 @@ namespace PhotoOrganizer.ViewModels
         public string SelectedPhoto
         {
             get => _selectedPhoto;
-            set => this.RaiseAndSetIfChanged(ref _selectedPhoto, value);
+            set
+            {
+                this.RaiseAndSetIfChanged(ref _selectedPhoto, value);
+                _currentAlbumManager.CurrentPhoto = value;
+            }
         }
-        
+
         #endregion
 
         #region Constructors

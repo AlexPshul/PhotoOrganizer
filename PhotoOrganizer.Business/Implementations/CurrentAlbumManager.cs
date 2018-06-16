@@ -5,6 +5,7 @@ using System.Reactive;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using PhotoOrganizer.Business.Interfaces;
 using PhotoOrganizer.Business.Models;
@@ -26,6 +27,7 @@ namespace PhotoOrganizer.Business.Implementations
 
         private readonly ISubject<Unit> _albumOpened = new Subject<Unit>();
         private readonly ISubject<Unit> _albumClosed = new Subject<Unit>();
+        private readonly ISubject<string> _currentPhotoChangedSubject = new Subject<string>();
         private readonly IFileSystemService _fileSystemService;
         
         #endregion
@@ -46,12 +48,25 @@ namespace PhotoOrganizer.Business.Implementations
             }
         }
 
+        private string _currentPhoto;
+        public string CurrentPhoto
+        {
+            get => _currentPhoto;
+            set
+            {
+                _currentPhoto = value; 
+                _currentPhotoChangedSubject.OnNext(value);
+            }
+        }
+
         #endregion
 
         #region Events
 
         public IObservable<Unit> AlbumOpened => _albumOpened.AsObservable();
         public IObservable<Unit> AlbumClosed => _albumClosed.AsObservable();
+
+        public IObservable<string> CurrentPhotoChanged => _currentPhotoChangedSubject.AsObservable();
 
         #endregion
 
@@ -74,6 +89,31 @@ namespace PhotoOrganizer.Business.Implementations
         {
             IReadOnlyCollection<FolderData> albumDataFolders = await _fileSystemService.GetAllFoldersData(CurrentAlbum.Source, CurrentAlbum.SubFolders, SupportedImageFormats);
             return albumDataFolders.Select(dataFolder => new AlbumFolder(dataFolder.FullPath, dataFolder.Files)).ToReadOnlyCollection();
+        }
+
+        public Task<string> AddAlbumFolder()
+        {
+            return Task.FromResult("");
+        }
+
+        public Task RemoveAlbumFolder(string name)
+        {
+            return Task.CompletedTask;
+        }
+
+        public Task<string> AddCurrentPhotoToFolder(string folderName)
+        {
+            return Task.FromResult("");
+        }
+
+        public Task<string> RemoveCurrentPhotoFromFolder(string folderName)
+        {
+            return Task.FromResult("");
+        }
+
+        public Task<bool> IsCurrentPhotoInFolder(string folderName)
+        {
+            return Task.FromResult(true);
         }
 
         #endregion

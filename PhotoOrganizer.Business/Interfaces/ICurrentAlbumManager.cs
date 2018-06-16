@@ -8,10 +8,13 @@ namespace PhotoOrganizer.Business.Interfaces
 {
     public interface ICurrentAlbumManager
     {
+        Album CurrentAlbum { get; }
+        string CurrentPhoto { get; set; }
+
         IObservable<Unit> AlbumOpened { get; }
         IObservable<Unit> AlbumClosed { get; }
 
-        Album CurrentAlbum { get; }
+        IObservable<string> CurrentPhotoChanged { get; }
 
         void OpenAlbum(Album album);
         void CloseCurrentAlbum();
@@ -19,5 +22,11 @@ namespace PhotoOrganizer.Business.Interfaces
         Task LaunchAlbumDestinationFolder();
 
         Task<IReadOnlyCollection<AlbumFolder>> GetAllAlbumFolders();
+        Task<string> AddAlbumFolder();
+        Task RemoveAlbumFolder(string name);
+
+        Task<string> AddCurrentPhotoToFolder(string folderName);
+        Task<string> RemoveCurrentPhotoFromFolder(string folderName);
+        Task<bool> IsCurrentPhotoInFolder(string folderName);
     }
 }

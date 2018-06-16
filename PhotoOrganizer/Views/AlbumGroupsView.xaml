@@ -7,35 +7,14 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewModels="using:PhotoOrganizer.ViewModels"
     xmlns:templateSelectors="using:PhotoOrganizer.TemplateSelectors"
+    xmlns:reactiveUi="using:ReactiveUI"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:behaviorActions="using:PhotoOrganizer.BehaviorActions"
     mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="400"
     d:DataContext="{d:DesignInstance viewModels:AlbumGroupsViewModel}">
-
-    <UserControl.Resources>
-
-        <DataTemplate x:Key="AddNewGroupTemplate">
-            <Button Style="{StaticResource TransparentButton}"
-                    Padding="5"
-                    Command="{Binding ElementName=AlbumGroupViewUserControl, Path=DataContext.OpenDestinationFolderCommand}">
-                <FontIcon Glyph="&#xECC8;" FontSize="65"/>
-            </Button>
-        </DataTemplate>
-
-        <DataTemplate x:Key="RegularGroupTemplate">
-            <TextBlock Text="{Binding}"
-                       Style="{StaticResource BaseTextBlockStyle}"
-                       FontSize="10"
-                       TextWrapping="Wrap" 
-                       HorizontalAlignment="Center" 
-                       VerticalAlignment="Center"/>
-        </DataTemplate>
-
-        <templateSelectors:AlbumGroupsTemplateSelector x:Key="AlbumGroupsTemplateSelector"
-                                                       AddNewGroupTemplate="{StaticResource AddNewGroupTemplate}"
-                                                       RegularGroupTemplate="{StaticResource RegularGroupTemplate}"/>
-
-    </UserControl.Resources>
 
     <Grid Background="{StaticResource TransparentLowMainBackgroundBrush}" 
           Padding="10" RowSpacing="15">
@@ -61,12 +40,30 @@
                   ScrollViewer.HorizontalScrollMode="Enabled"
                   ItemsSource="{Binding Groups}"
                   SelectionMode="None"
-                  ItemTemplateSelector="{StaticResource AlbumGroupsTemplateSelector}">
+                  CanReorderItems="True"
+                  AllowDrop="True"
+                  CanDragItems="True">
+            <interactivity:Interaction.Behaviors>
+                <core:EventTriggerBehavior EventName="DragItemsStarting">
+                    <behaviorActions:CancelOnLastElementReorderAction/>
+                </core:EventTriggerBehavior>
+            </interactivity:Interaction.Behaviors>
             <ListView.ItemsPanel>
                 <ItemsPanelTemplate>
                     <ItemsStackPanel Orientation="Horizontal"/>
                 </ItemsPanelTemplate>
             </ListView.ItemsPanel>
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="Padding" Value="0"/>
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                </Style>
+            </ListView.ItemContainerStyle>
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <reactiveUi:ViewModelViewHost ViewModel="{Binding}" Margin="5, 0"/>
+                </DataTemplate>
+            </ListView.ItemTemplate>
         </ListView>
     </Grid>
 
