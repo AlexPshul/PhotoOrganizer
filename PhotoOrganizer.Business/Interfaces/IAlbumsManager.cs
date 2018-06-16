@@ -13,6 +13,7 @@ namespace PhotoOrganizer.Business.Interfaces
         Task<bool> IsAlbumNameTaken(string albumName);
         Task<string> GetNextAvailableAlbumName(string baseName);
         Task CreateAlbum(Album album);
+        Task UpdateAlbum(Album album);
         Task<Album> GetAlbum(string name);
         Task DeleteAlbum(string name);
     }

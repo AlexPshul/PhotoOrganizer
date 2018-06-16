@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.IO;
 using System.Linq;
 using System.Reactive;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using PhotoOrganizer.Business.Interfaces;
@@ -17,6 +21,7 @@ namespace PhotoOrganizer.ViewModels
         #region Private Members
 
         private readonly ICurrentAlbumManager _currentAlbumManager;
+        private readonly SerialDisposable _deleteFolderGroupSubscriptions = new SerialDisposable();
 
         #endregion
 
@@ -37,23 +42,45 @@ namespace PhotoOrganizer.ViewModels
 
             IEnumerable<IGroupItemViewModel> groups = _currentAlbumManager.CurrentAlbum.SubFolders.Select(groupFolderFactory.Create);
             Groups = new ObservableCollection<IGroupItemViewModel>(groups.Concat(groupCreator));
+            Groups.CollectionChanged += ReorderIfMovedToLast;
 
-            Groups.CollectionChanged += async (sender, args) =>
-            {
-                if (args.NewStartingIndex == Groups.Count - 1 && Groups[Groups.Count - 1] is IGroupCreatorViewModel)
-                {
-                    await Window.Current.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, SwitchLastItems);
+            groupCreator.ExecuteGroupLogicCommand
+                .Select(groupFolderFactory.Create)
+                .Do(newGroup => Groups.Insert(Groups.Count - 1, newGroup))
+                .Subscribe(_ => SubscribeToGroupDeletion());
 
-                    void SwitchLastItems()
-                    {
-                        IGroupItemViewModel lastElement = Groups[Groups.Count - 1];
-                        Groups[Groups.Count - 1] = Groups[Groups.Count - 2];
-                        Groups[Groups.Count - 2] = lastElement;
-                    }
-                }
-            };
+            SubscribeToGroupDeletion();
 
             OpenDestinationFolderCommand = ReactiveCommand.CreateFromTask(_currentAlbumManager.LaunchAlbumDestinationFolder);
+        }
+
+        #endregion
+
+        #region Private Methods
+
+        private async void ReorderIfMovedToLast(object sender, NotifyCollectionChangedEventArgs args)
+        {
+            if (args.NewStartingIndex == Groups.Count - 1 && !(Groups[Groups.Count - 1] is IGroupCreatorViewModel))
+            {
+                await Window.Current.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, SwitchLastItems);
+
+                void SwitchLastItems()
+                {
+                    IGroupItemViewModel lastElement = Groups[Groups.Count - 1];
+                    Groups[Groups.Count - 1] = Groups[Groups.Count - 2];
+                    Groups[Groups.Count - 2] = lastElement;
+                }
+            }
+        }
+
+        private void SubscribeToGroupDeletion()
+        {
+            _deleteFolderGroupSubscriptions.Disposable = Groups
+                .OfType<IGroupFolderViewModel>()
+                .Select(folderGroup => folderGroup.GroupDeleted)
+                .Merge()
+                .Do(deletedFolder => Groups.Remove(deletedFolder))
+                .Subscribe(_ => SubscribeToGroupDeletion());
         }
 
         #endregion

@@ -28,9 +28,12 @@
                     Command="{Binding OpenDestinationFolderCommand}">
                 <FontIcon Glyph="&#xED43;"/>
             </Button>
+
             <TextBlock Text="{Binding Album.Destination}"
                        Style="{StaticResource BaseTextBlockStyle}"
+                       
                        VerticalAlignment="Center"/>
+
         </StackPanel>
 
         <ListView Grid.Row="1"
@@ -57,6 +60,7 @@
                 <Style TargetType="ListViewItem">
                     <Setter Property="Padding" Value="0"/>
                     <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                    <Setter Property="VerticalContentAlignment" Value="Stretch"/>
                 </Style>
             </ListView.ItemContainerStyle>
             <ListView.ItemTemplate>

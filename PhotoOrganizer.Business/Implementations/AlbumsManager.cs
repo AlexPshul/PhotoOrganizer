@@ -76,6 +76,13 @@ namespace PhotoOrganizer.Business.Implementations
             await _localStorageService.CreateString(AlbumsGroup, album.Name, albumJson);
         }
 
+        public async Task UpdateAlbum(Album album)
+        {
+            string albumJson = await Task.Run(() => JsonConvert.SerializeObject(album));
+
+            await _localStorageService.CreateString(AlbumsGroup, album.Name, albumJson);
+        }
+
         public async Task<Album> GetAlbum(string name)
         {
             string albumJson = await _localStorageService.GetString(AlbumsGroup, name);

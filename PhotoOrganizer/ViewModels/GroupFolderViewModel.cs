@@ -1,6 +1,12 @@
-﻿using System.Reactive;
+﻿using System;
+using System.IO;
+using System.Reactive;
+using System.Reactive.Linq;
 using System.Threading.Tasks;
+using Windows.UI.Xaml.Controls;
 using PhotoOrganizer.Business.Interfaces;
+using PhotoOrganizer.Controls;
+using PhotoOrganizer.Text;
 using ReactiveUI;
 
 namespace PhotoOrganizer.ViewModels
@@ -16,13 +22,20 @@ namespace PhotoOrganizer.ViewModels
         #region Properties
 
         private string _title;
-        public string Title
+        public string GroupPath
         {
             get => _title;
             set => this.RaiseAndSetIfChanged(ref _title, value);
         }
-
+        
         public ReactiveCommand<Unit, string> ExecuteGroupLogicCommand { get; }
+        public ReactiveCommand<Unit, bool> DeleteGroupCommand { get; }
+
+        #endregion
+
+        #region Events
+
+        public IObservable<IGroupFolderViewModel> GroupDeleted => DeleteGroupCommand.Where(result => result).Select(_ => this);
 
         #endregion
 
@@ -30,10 +43,10 @@ namespace PhotoOrganizer.ViewModels
 
         private GroupFolderViewModel(string title, ICurrentAlbumManager currentAlbumManager)
         {
-            Title = title;
+            GroupPath = title;
             _currentAlbumManager = currentAlbumManager;
             ExecuteGroupLogicCommand = ReactiveCommand.CreateFromTask(AddCurrentPhotoToGroup);
-
+            DeleteGroupCommand = ReactiveCommand.CreateFromTask(_ => DeleteGroup());
         }
 
         public class Factory : IGroupFolderViewModelFactory
@@ -54,10 +67,27 @@ namespace PhotoOrganizer.ViewModels
 
         private async Task<string> AddCurrentPhotoToGroup()
         {
-            if (await _currentAlbumManager.IsCurrentPhotoInFolder(Title))
-                return await _currentAlbumManager.RemoveCurrentPhotoFromFolder(Title);
+            if (await _currentAlbumManager.IsCurrentPhotoInFolder(GroupPath))
+                return await _currentAlbumManager.RemoveCurrentPhotoFromFolder(GroupPath);
             
-            return await _currentAlbumManager.AddCurrentPhotoToFolder(Title);
+            return await _currentAlbumManager.AddCurrentPhotoToFolder(GroupPath);
+        }
+
+        private async Task<bool> DeleteGroup()
+        {
+            CustomContentDialog deleteDialog = new CustomContentDialog(StringsReader.Get("Content_DeleteGroupConfirmation"), Path.GetFileName(GroupPath))
+            {
+                Title = StringsReader.Get("Title_DeleteAlbum"),
+                PrimaryButtonText = StringsReader.Get("Button_DeletePrimary"),
+                SecondaryButtonText = StringsReader.Get("Button_DeleteSecondary")
+            };
+
+            ContentDialogResult contentDialogResult = await deleteDialog.ShowAsync();
+            if (contentDialogResult != ContentDialogResult.Primary)
+                return false;
+
+            await _currentAlbumManager.RemoveAlbumFolder(GroupPath);
+            return true;
         }
 
         #endregion

@@ -1,7 +1,13 @@
-﻿namespace PhotoOrganizer.ViewModels
+﻿using System;
+using System.Reactive;
+using ReactiveUI;
+
+namespace PhotoOrganizer.ViewModels
 {
     public interface IGroupFolderViewModel : IGroupItemViewModel
     {
-        string Title { get; }
+        string GroupPath { get; }
+
+        IObservable<IGroupFolderViewModel> GroupDeleted { get; }
     }
 }

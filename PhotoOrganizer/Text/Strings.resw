@@ -130,6 +130,9 @@
     <value>Are you sure you want to delete {0}?</value>
     <comment>0 - Album Name</comment>
   </data>
+  <data name="Content_DeleteGroupConfirmation" xml:space="preserve">
+    <value>Are you sure you want to delete group {0}? \nIt will also delete all the grouped photos.</value>
+  </data>
   <data name="Error_AlbumNameInUse" xml:space="preserve">
     <value>Album name already taken</value>
   </data>
@@ -156,6 +159,9 @@
   </data>
   <data name="Title_NewAlbumBaseName" xml:space="preserve">
     <value>My New Album</value>
+  </data>
+  <data name="Title_NewGroupBaseName" xml:space="preserve">
+    <value>Group</value>
   </data>
   <data name="ToolTip_Delete" xml:space="preserve">
     <value>Delete</value>

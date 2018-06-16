@@ -13,5 +13,7 @@ namespace PhotoOrganizer.Services.Interfaces
         Task OpenDirectoryInExplorer(string fullPath);
 
         Task<IReadOnlyCollection<FolderData>> GetAllFoldersData(string fullPath, IReadOnlyCollection<string> foldersToIgnore = null, params string[] formats);
+        Task<string> CreateNewFolder(string baseFolderPath, string name);
+        Task DeleteFolder(string folderFullPath);
     }
 }

@@ -22,8 +22,8 @@ namespace PhotoOrganizer.Business.Interfaces
         Task LaunchAlbumDestinationFolder();
 
         Task<IReadOnlyCollection<AlbumFolder>> GetAllAlbumFolders();
-        Task<string> AddAlbumFolder();
-        Task RemoveAlbumFolder(string name);
+        Task<string> AddAlbumFolder(string baseName);
+        Task RemoveAlbumFolder(string path);
 
         Task<string> AddCurrentPhotoToFolder(string folderName);
         Task<string> RemoveCurrentPhotoFromFolder(string folderName);

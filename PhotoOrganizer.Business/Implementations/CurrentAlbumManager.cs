@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
@@ -28,8 +29,9 @@ namespace PhotoOrganizer.Business.Implementations
         private readonly ISubject<Unit> _albumOpened = new Subject<Unit>();
         private readonly ISubject<Unit> _albumClosed = new Subject<Unit>();
         private readonly ISubject<string> _currentPhotoChangedSubject = new Subject<string>();
+        private readonly IAlbumsManager _albumsManager;
         private readonly IFileSystemService _fileSystemService;
-        
+
         #endregion
 
         #region Properties
@@ -72,8 +74,9 @@ namespace PhotoOrganizer.Business.Implementations
 
         #region Constructors
 
-        public CurrentAlbumManager(IFileSystemService fileSystemService)
+        public CurrentAlbumManager(IAlbumsManager albumsManager, IFileSystemService fileSystemService)
         {
+            _albumsManager = albumsManager;
             _fileSystemService = fileSystemService;
         }
 
@@ -91,14 +94,25 @@ namespace PhotoOrganizer.Business.Implementations
             return albumDataFolders.Select(dataFolder => new AlbumFolder(dataFolder.FullPath, dataFolder.Files)).ToReadOnlyCollection();
         }
 
-        public Task<string> AddAlbumFolder()
+        public async Task<string> AddAlbumFolder(string baseName)
         {
-            return Task.FromResult("");
+            string newFolderPath = await _fileSystemService.CreateNewFolder(CurrentAlbum.Destination, baseName);
+            CurrentAlbum.SubFolders = CurrentAlbum.SubFolders.Concat(newFolderPath).ToArray();
+            await _albumsManager.UpdateAlbum(CurrentAlbum);
+
+            return newFolderPath;
         }
 
-        public Task RemoveAlbumFolder(string name)
+        public async Task RemoveAlbumFolder(string path)
         {
-            return Task.CompletedTask;
+            string folderToDeletePath = CurrentAlbum.SubFolders.FirstOrDefault(subFolder => subFolder == path);
+            if (folderToDeletePath == null)
+                return;
+
+            await _fileSystemService.DeleteFolder(folderToDeletePath);
+
+            CurrentAlbum.SubFolders = CurrentAlbum.SubFolders.Except(folderToDeletePath).ToArray();
+            await _albumsManager.UpdateAlbum(CurrentAlbum);
         }
 
         public Task<string> AddCurrentPhotoToFolder(string folderName)

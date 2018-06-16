@@ -11,12 +11,22 @@
     d:DesignWidth="400"
     d:DataContext="{d:DesignInstance viewModels:GroupFolderViewModel}">
 
-    
-    <TextBlock Text="{Binding Title}"
-               Style="{StaticResource BaseTextBlockStyle}"
-               FontSize="10"
-               TextWrapping="Wrap" 
-               HorizontalAlignment="Center" 
-               VerticalAlignment="Center"/>
+
+    <Grid BorderThickness="2" BorderBrush="{StaticResource HighHighlightBrush}"
+          Background="{StaticResource TransparentHighMainBackgroundBrush}">
+        <TextBlock Text="{Binding GroupPath, Converter={StaticResource PathToNameConverter}}"
+                   Style="{StaticResource BaseTextBlockStyle}"
+                   FontSize="10"
+                   TextWrapping="Wrap" 
+                   HorizontalAlignment="Center" 
+                   VerticalAlignment="Center"/>
+        <Button HorizontalAlignment="Right" VerticalAlignment="Top"
+                Style="{StaticResource TransparentButton}"
+                Padding="2"
+                BorderThickness="1, 0, 0, 1"
+                Command="{Binding DeleteGroupCommand}">
+            <FontIcon Glyph="&#xECC9;" FontSize="16"/>
+        </Button>
+    </Grid>
 
 </UserControl>
