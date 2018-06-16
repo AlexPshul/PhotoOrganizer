@@ -20,6 +20,7 @@ namespace PhotoOrganizer.Business.Interfaces
         void CloseCurrentAlbum();
 
         Task LaunchAlbumDestinationFolder();
+        Task UpdateAlbumSubFolders(IEnumerable<string> updatedSubFolders);
 
         Task<IReadOnlyCollection<AlbumFolder>> GetAllAlbumFolders();
         Task<string> AddAlbumFolder(string baseName);

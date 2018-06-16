@@ -21,15 +21,23 @@ namespace PhotoOrganizer.ViewModels
 
         #region Properties
 
-        private string _title;
+        private string _groupPath;
         public string GroupPath
         {
-            get => _title;
-            set => this.RaiseAndSetIfChanged(ref _title, value);
+            get => _groupPath;
+            set => this.RaiseAndSetIfChanged(ref _groupPath, value);
         }
-        
+
+        private int _index;
+        public int Index
+        {
+            get => _index;
+            set => this.RaiseAndSetIfChanged(ref _index, value);
+        }
+
         public ReactiveCommand<Unit, string> ExecuteGroupLogicCommand { get; }
         public ReactiveCommand<Unit, bool> DeleteGroupCommand { get; }
+        public ReactiveCommand<string, Unit> RenameCommand { get; }
 
         #endregion
 
@@ -47,6 +55,7 @@ namespace PhotoOrganizer.ViewModels
             _currentAlbumManager = currentAlbumManager;
             ExecuteGroupLogicCommand = ReactiveCommand.CreateFromTask(AddCurrentPhotoToGroup);
             DeleteGroupCommand = ReactiveCommand.CreateFromTask(_ => DeleteGroup());
+            RenameCommand = ReactiveCommand.CreateFromTask<string>(RenameGroup);
         }
 
         public class Factory : IGroupFolderViewModelFactory
@@ -88,6 +97,11 @@ namespace PhotoOrganizer.ViewModels
 
             await _currentAlbumManager.RemoveAlbumFolder(GroupPath);
             return true;
+        }
+
+        private async Task RenameGroup(string newName)
+        {
+            await Task.CompletedTask;
         }
 
         #endregion

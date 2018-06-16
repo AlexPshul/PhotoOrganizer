@@ -42,13 +42,20 @@ namespace PhotoOrganizer.ViewModels
 
             IEnumerable<IGroupItemViewModel> groups = _currentAlbumManager.CurrentAlbum.SubFolders.Select(groupFolderFactory.Create);
             Groups = new ObservableCollection<IGroupItemViewModel>(groups.Concat(groupCreator));
-            Groups.CollectionChanged += ReorderIfMovedToLast;
+
+            Observable
+                .FromEventPattern<NotifyCollectionChangedEventArgs>(Groups, nameof(Groups.CollectionChanged))
+                .Do(pattern => ReorderIfMovedToLast(pattern.EventArgs))
+                .Do(_ => ResetIndexes())
+                .Throttle(TimeSpan.FromMilliseconds(100))
+                .Subscribe(_ => UpdateCurrentAlbum());
 
             groupCreator.ExecuteGroupLogicCommand
                 .Select(groupFolderFactory.Create)
                 .Do(newGroup => Groups.Insert(Groups.Count - 1, newGroup))
                 .Subscribe(_ => SubscribeToGroupDeletion());
 
+            ResetIndexes();
             SubscribeToGroupDeletion();
 
             OpenDestinationFolderCommand = ReactiveCommand.CreateFromTask(_currentAlbumManager.LaunchAlbumDestinationFolder);
@@ -58,7 +65,17 @@ namespace PhotoOrganizer.ViewModels
 
         #region Private Methods
 
-        private async void ReorderIfMovedToLast(object sender, NotifyCollectionChangedEventArgs args)
+        private void UpdateCurrentAlbum()
+        {
+            _currentAlbumManager.UpdateAlbumSubFolders(Groups.OfType<IGroupFolderViewModel>().Select(folderGroup => folderGroup.GroupPath));
+        }
+
+        private void ResetIndexes()
+        {
+            Groups.OfType<IGroupFolderViewModel>().ForEach((item, index) => item.Index = index + 1);
+        }
+
+        private async void ReorderIfMovedToLast(NotifyCollectionChangedEventArgs args)
         {
             if (args.NewStartingIndex == Groups.Count - 1 && !(Groups[Groups.Count - 1] is IGroupCreatorViewModel))
             {

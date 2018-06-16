@@ -88,6 +88,15 @@ namespace PhotoOrganizer.Business.Implementations
         public void CloseCurrentAlbum() => CurrentAlbum = null;
         public Task LaunchAlbumDestinationFolder() => _fileSystemService.OpenDirectoryInExplorer(CurrentAlbum.Destination);
 
+        public async Task UpdateAlbumSubFolders(IEnumerable<string> updatedSubFolders)
+        {
+            if (updatedSubFolders == null)
+                return;
+
+            CurrentAlbum.SubFolders = updatedSubFolders as string[] ?? updatedSubFolders.ToArray();
+            await _albumsManager.UpdateAlbum(CurrentAlbum);
+        }
+
         public async Task<IReadOnlyCollection<AlbumFolder>> GetAllAlbumFolders()
         {
             IReadOnlyCollection<FolderData> albumDataFolders = await _fileSystemService.GetAllFoldersData(CurrentAlbum.Source, CurrentAlbum.SubFolders, SupportedImageFormats);
@@ -97,8 +106,7 @@ namespace PhotoOrganizer.Business.Implementations
         public async Task<string> AddAlbumFolder(string baseName)
         {
             string newFolderPath = await _fileSystemService.CreateNewFolder(CurrentAlbum.Destination, baseName);
-            CurrentAlbum.SubFolders = CurrentAlbum.SubFolders.Concat(newFolderPath).ToArray();
-            await _albumsManager.UpdateAlbum(CurrentAlbum);
+            await UpdateAlbumSubFolders(CurrentAlbum.SubFolders.Concat(newFolderPath));
 
             return newFolderPath;
         }
@@ -110,9 +118,7 @@ namespace PhotoOrganizer.Business.Implementations
                 return;
 
             await _fileSystemService.DeleteFolder(folderToDeletePath);
-
-            CurrentAlbum.SubFolders = CurrentAlbum.SubFolders.Except(folderToDeletePath).ToArray();
-            await _albumsManager.UpdateAlbum(CurrentAlbum);
+            await UpdateAlbumSubFolders(CurrentAlbum.SubFolders.Except(folderToDeletePath));
         }
 
         public Task<string> AddCurrentPhotoToFolder(string folderName)

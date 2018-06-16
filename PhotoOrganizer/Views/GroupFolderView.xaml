@@ -6,6 +6,9 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewModels="using:PhotoOrganizer.ViewModels"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:behaviorActions="using:PhotoOrganizer.BehaviorActions"
     mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="400"
@@ -14,19 +17,36 @@
 
     <Grid BorderThickness="2" BorderBrush="{StaticResource HighHighlightBrush}"
           Background="{StaticResource TransparentHighMainBackgroundBrush}">
-        <TextBlock Text="{Binding GroupPath, Converter={StaticResource PathToNameConverter}}"
-                   Style="{StaticResource BaseTextBlockStyle}"
-                   FontSize="10"
-                   TextWrapping="Wrap" 
-                   HorizontalAlignment="Center" 
-                   VerticalAlignment="Center"/>
+        <TextBox x:Name="GroupNameTextBox"
+                 Text="{Binding GroupPath, Converter={StaticResource PathToNameConverter}}"
+                 Style="{StaticResource TextBlockLikeStyle}"
+                 FontSize="10"
+                 HorizontalAlignment="Center" 
+                 VerticalAlignment="Bottom"
+                 Margin="0, 0, 0, 2"
+                 MaxWidth="{Binding ElementName=GroupNameTextBox, Path=ActualHeight}"
+                 KeyUp="GroupNameTextBox_OnPreviewKeyDown">
+            <interactivity:Interaction.Behaviors>
+                
+                <core:EventTriggerBehavior EventName="LostFocus">
+                    <core:InvokeCommandAction Command="{Binding RenameCommand}" CommandParameter="{Binding ElementName=GroupNameTextBox, Path=Text}"/>
+                </core:EventTriggerBehavior>
+                <core:EventTriggerBehavior EventName="GotFocus">
+                    <behaviorActions:FocusAction TargetControl="{Binding ElementName=GroupNameTextBox}"/>
+                </core:EventTriggerBehavior>
+            </interactivity:Interaction.Behaviors>
+        </TextBox>
         <Button HorizontalAlignment="Right" VerticalAlignment="Top"
                 Style="{StaticResource TransparentButton}"
                 Padding="2"
                 BorderThickness="1, 0, 0, 1"
-                Command="{Binding DeleteGroupCommand}">
+                Command="{Binding DeleteGroupCommand}"
+                IsTabStop="False">
             <FontIcon Glyph="&#xECC9;" FontSize="16"/>
         </Button>
+        <TextBlock Text="{Binding Index}" Padding="2, 0"
+                   HorizontalAlignment="Left"
+                   FontFamily="{StaticResource MainFont}"/>
     </Grid>
 
 </UserControl>

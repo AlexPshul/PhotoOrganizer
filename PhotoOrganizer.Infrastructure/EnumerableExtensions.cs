@@ -14,6 +14,13 @@ namespace PhotoOrganizer.Infrastructure
                 action(item);
         }
 
+        public static void ForEach<T>(this IEnumerable<T> source, Action<T, int> action)
+        {
+            source
+                .Select((item, index) => (item, index))
+                .ForEach(indexedPair => action(indexedPair.Item1, indexedPair.Item2));
+        }
+
         public static IReadOnlyCollection<T> ToReadOnlyCollection<T>(this IEnumerable<T> source) => source.ToList().AsReadOnly();
         public static HashSet<T> ToHashSet<T>(this IEnumerable<T> source) => new HashSet<T>(source);
         public static string JoinStrings(this IEnumerable<string> source, string separator) => string.Join(separator, source);
