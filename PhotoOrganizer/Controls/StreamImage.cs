@@ -135,13 +135,14 @@ namespace PhotoOrganizer.Controls
             if (_cache.ContainsKey(Source))
                 return;
 
+            string localSourceCopy = Source;
             using (DisposableExtensions.Create(() => IsLoading = true, () => IsLoading = false))
-            using (IRandomAccessStream stream = await FileRandomAccessStream.OpenAsync(Source, FileAccessMode.Read))
+            using (IRandomAccessStream stream = await FileRandomAccessStream.OpenAsync(localSourceCopy, FileAccessMode.Read))
             {
                 BitmapImage bitmapImage = new BitmapImage { DecodePixelWidth = (int)ActualWidth + 20 };
 
                 await bitmapImage.SetSourceAsync(stream);
-                _cache[Source] = bitmapImage;
+                _cache[localSourceCopy] = bitmapImage;
                 Image.Source = bitmapImage;
             }
         }

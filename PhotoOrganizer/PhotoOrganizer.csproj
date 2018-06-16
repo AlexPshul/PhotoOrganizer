@@ -101,6 +101,7 @@
     <Compile Include="Controls\StreamImage.cs" />
     <Compile Include="Converters\AnythingToUnitConverter.cs" />
     <Compile Include="Converters\InvertBooleanConverter.cs" />
+    <Compile Include="Converters\PathToNameConverter.cs" />
     <Compile Include="Converters\StringToImageSourceConverter.cs" />
     <Compile Include="Converters\SubtractionConverter.cs" />
     <Compile Include="TemplateSelectors\AlbumGroupsTemplateSelector.cs" />

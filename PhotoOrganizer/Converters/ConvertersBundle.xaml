@@ -6,5 +6,6 @@
     <converters:InvertBooleanConverter x:Key="InvertBooleanConverter"/>
     <converters:StringToImageSourceConverter x:Key="StringToImageSourceConverter"/>
     <converters:SubtractionConverter x:Key="SubtractionConverter"/>
+    <converters:PathToNameConverter x:Key="PathToNameConverter"/>
 
 </ResourceDictionary>
