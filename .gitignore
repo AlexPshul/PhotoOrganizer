@@ -11,3 +11,6 @@
 /PhotoOrganizer.Infrastructure/obj
 /PhotoOrganizer.Services/obj
 /PhotoOrganizer.Services/bin
+/PhotoOrganizer.WindowsServices/bin/Debug
+/PhotoOrganizer.WindowsServices/obj/Debug
+/PhotoOrganizer.WindowsServices/obj
