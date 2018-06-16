@@ -38,6 +38,13 @@ namespace PhotoOrganizer.ViewModels
         public Album Album => _currentAlbumManager.CurrentAlbum;
 
         public IAlbumGroupsViewModel AlbumGroupsViewModel { get; }
+
+        private string _selectedPhoto;
+        public string SelectedPhoto
+        {
+            get => _selectedPhoto;
+            set => this.RaiseAndSetIfChanged(ref _selectedPhoto, value);
+        }
         
         #endregion
 

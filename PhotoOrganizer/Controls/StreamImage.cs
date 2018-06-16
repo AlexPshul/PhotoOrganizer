@@ -27,12 +27,19 @@ namespace PhotoOrganizer.Controls
 
         private IDisposable _eventSubscriptions;
         private readonly Subject<Unit> _sourceUpdatedSubject = new Subject<Unit>();
+        private readonly CacheDictionary<string, BitmapImage> _cache = new CacheDictionary<string, BitmapImage>();
 
         #endregion
 
         #region Properties
 
         public Image Image { get; private set; }
+
+        public int CacheLimit
+        {
+            get => _cache.Limit;
+            set => _cache.Limit = value;
+        }
 
         #endregion
 
@@ -72,6 +79,8 @@ namespace PhotoOrganizer.Controls
         {
             DefaultStyleKey = typeof(StreamImage);
 
+            CacheLimit = 1;
+
             SizeChanged += (sender, args) =>
             {
                 if (args.PreviousSize != Size.Empty)
@@ -81,7 +90,7 @@ namespace PhotoOrganizer.Controls
             Loaded += (sender, args) =>
             {
                 _eventSubscriptions = _sourceUpdatedSubject
-                    .Do(_ => Image.Source = null)
+                    .Do(_ => InitializeSourceFromCache())
                     .Throttle(TimeSpan.FromMilliseconds(250))
                     .ObserveOnDispatcher()
                     .Subscribe(_ => ReloadImage());
@@ -120,18 +129,28 @@ namespace PhotoOrganizer.Controls
 
         private async void ReloadImage()
         {
-            Image.Source = null;
             if (!_isLoaded || Image == null || Source == null)
                 return;
-            
+
+            if (_cache.ContainsKey(Source))
+                return;
+
             using (DisposableExtensions.Create(() => IsLoading = true, () => IsLoading = false))
             using (IRandomAccessStream stream = await FileRandomAccessStream.OpenAsync(Source, FileAccessMode.Read))
             {
                 BitmapImage bitmapImage = new BitmapImage { DecodePixelWidth = (int)ActualWidth + 20 };
 
                 await bitmapImage.SetSourceAsync(stream);
+                _cache[Source] = bitmapImage;
                 Image.Source = bitmapImage;
             }
+        }
+
+        private void InitializeSourceFromCache()
+        {
+            Image.Source = _cache.TryGetValue(Source ?? "", out BitmapImage cachedImage) 
+                ? cachedImage 
+                : null;
         }
 
         #endregion

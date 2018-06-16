@@ -3,7 +3,6 @@
     x:Name="AlbumViewUserControl"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:PhotoOrganizer.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewModels="using:PhotoOrganizer.ViewModels"
@@ -85,7 +84,8 @@
         <ListView x:Name="ImagesList" 
                   Grid.Column="0" Grid.Row="1"
                   Style="{StaticResource ImageThumbnailStyle}"
-                  ItemsSource="{Binding Source={StaticResource AllPhotosCollection}}">
+                  ItemsSource="{Binding Source={StaticResource AllPhotosCollection}}"
+                  SelectedItem="{Binding SelectedPhoto, Mode=TwoWay}">
             <ListView.GroupStyle>
                 <GroupStyle HeaderContainerStyle="{StaticResource ImagesHeaderContainerStyle}"
                             HeaderTemplate="{StaticResource ImagesHeaderTemplate}"
@@ -98,7 +98,8 @@
             </ListView.ItemTemplate>
         </ListView>
 
-        <controls:StreamImage Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" Source="{Binding ElementName=ImagesList, Path=SelectedItem}"/>
+        <controls:StreamImage Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" Source="{Binding SelectedPhoto}"
+                              CacheLimit="10"/>
 
         <Border Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" 
                 HorizontalAlignment="Left" Padding="0, 0, 15, 0"
