@@ -105,6 +105,8 @@
                                                 <Run Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=MessageFirstPart}"/>
                                                 <Run Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Parameter}" Foreground="{StaticResource HighHighlightBrush}"/>
                                                 <Run Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=MessageSecondPart}"/>
+                                                <LineBreak/>
+                                                <Run Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=DetailsLinePart}"/>
                                             </TextBlock>
                                         </Grid>
                                     </ScrollViewer>

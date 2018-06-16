@@ -9,6 +9,7 @@
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:behaviorActions="using:PhotoOrganizer.BehaviorActions"
+    xmlns:behaviors="using:PhotoOrganizer.Behaviors"
     mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="400"
@@ -24,13 +25,9 @@
                  HorizontalAlignment="Center" 
                  VerticalAlignment="Bottom"
                  Margin="0, 0, 0, 2"
-                 MaxWidth="{Binding ElementName=GroupNameTextBox, Path=ActualHeight}"
-                 KeyUp="GroupNameTextBox_OnPreviewKeyDown">
+                 MaxWidth="{Binding ElementName=GroupNameTextBox, Path=ActualHeight}">
             <interactivity:Interaction.Behaviors>
-                
-                <core:EventTriggerBehavior EventName="LostFocus">
-                    <core:InvokeCommandAction Command="{Binding RenameCommand}" CommandParameter="{Binding ElementName=GroupNameTextBox, Path=Text}"/>
-                </core:EventTriggerBehavior>
+                <behaviors:TextBoxEditBehavior EditCompletedCommand="{Binding RenameCommand}"/>
                 <core:EventTriggerBehavior EventName="GotFocus">
                     <behaviorActions:FocusAction TargetControl="{Binding ElementName=GroupNameTextBox}"/>
                 </core:EventTriggerBehavior>

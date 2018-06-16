@@ -131,7 +131,10 @@
     <comment>0 - Album Name</comment>
   </data>
   <data name="Content_DeleteGroupConfirmation" xml:space="preserve">
-    <value>Are you sure you want to delete group {0}? \nIt will also delete all the grouped photos.</value>
+    <value>Are you sure you want to delete group {0}?</value>
+  </data>
+  <data name="Content_DeleteGroupDetails" xml:space="preserve">
+    <value>It will also delete all the grouped photos.</value>
   </data>
   <data name="Error_AlbumNameInUse" xml:space="preserve">
     <value>Album name already taken</value>
@@ -153,6 +156,9 @@
   </data>
   <data name="Title_DeleteAlbum" xml:space="preserve">
     <value>Delete Album</value>
+  </data>
+  <data name="Title_DeleteGroup" xml:space="preserve">
+    <value>Delete Group</value>
   </data>
   <data name="Title_FetchingPhotos" xml:space="preserve">
     <value>Fetching Photos...</value>

@@ -87,6 +87,25 @@ namespace PhotoOrganizer.WindowsServices.Implementations
             }
         }
 
+        public async Task<string> RenameFolder(string path, string newName)
+        {
+            try
+            {
+                if (!await DoesDirectoryExists(path))
+                    return "";
+
+                StorageFolder folderToRename = await StorageFolder.GetFolderFromPathAsync(path);
+                await folderToRename.RenameAsync(newName, NameCollisionOption.GenerateUniqueName);
+
+                return folderToRename.Path;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return "";
+            }
+        }
+
         public async Task DeleteFolder(string folderFullPath)
         {
             if (!await DoesDirectoryExists(folderFullPath))

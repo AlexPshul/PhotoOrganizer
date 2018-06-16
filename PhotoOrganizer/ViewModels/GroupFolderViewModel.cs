@@ -84,9 +84,11 @@ namespace PhotoOrganizer.ViewModels
 
         private async Task<bool> DeleteGroup()
         {
-            CustomContentDialog deleteDialog = new CustomContentDialog(StringsReader.Get("Content_DeleteGroupConfirmation"), Path.GetFileName(GroupPath))
+            string confirmation = StringsReader.Get("Content_DeleteGroupConfirmation");
+            string details = StringsReader.Get("Content_DeleteGroupDetails");
+            CustomContentDialog deleteDialog = new CustomContentDialog(confirmation, Path.GetFileName(GroupPath), details)
             {
-                Title = StringsReader.Get("Title_DeleteAlbum"),
+                Title = StringsReader.Get("Title_DeleteGroup"),
                 PrimaryButtonText = StringsReader.Get("Button_DeletePrimary"),
                 SecondaryButtonText = StringsReader.Get("Button_DeleteSecondary")
             };
@@ -101,7 +103,10 @@ namespace PhotoOrganizer.ViewModels
 
         private async Task RenameGroup(string newName)
         {
-            await Task.CompletedTask;
+            if (Path.GetFileName(GroupPath) == newName)
+                return;
+
+            GroupPath = await _currentAlbumManager.RenameAlbumFolder(GroupPath, newName);
         }
 
         #endregion

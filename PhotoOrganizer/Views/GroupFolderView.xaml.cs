@@ -22,16 +22,5 @@ namespace PhotoOrganizer.Views
             set => ViewModel = (IGroupFolderViewModel)value;
         }
         public IGroupFolderViewModel ViewModel { get; set; }
-
-        private void GroupNameTextBox_OnPreviewKeyDown(object sender, KeyRoutedEventArgs e)
-        {
-            if (e.Key == VirtualKey.Enter)
-            {
-                GroupNameTextBox.IsTabStop = false;
-                GroupNameTextBox.IsEnabled = false;
-                GroupNameTextBox.IsEnabled = true;
-                GroupNameTextBox.IsTabStop = true;
-            }
-        }
     }
 }

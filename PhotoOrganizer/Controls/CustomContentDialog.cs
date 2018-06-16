@@ -46,6 +46,19 @@ namespace PhotoOrganizer.Controls
 
         #endregion
 
+        #region DetailsLinePart
+        
+        public string DetailsLinePart
+        {
+            get => (string)GetValue(DetailsLinePartProperty);
+            set => SetValue(DetailsLinePartProperty, value);
+        }
+
+        public static readonly DependencyProperty DetailsLinePartProperty =
+            DependencyProperty.Register(nameof(DetailsLinePart), typeof(string), typeof(CustomContentDialog), new PropertyMetadata(null));
+
+        #endregion
+
         #region Parameter
 
         public string Parameter
@@ -63,11 +76,12 @@ namespace PhotoOrganizer.Controls
 
         #region Constructors
 
-        public CustomContentDialog(string messageTemplate, string parameter)
+        public CustomContentDialog(string messageTemplate, string parameter, string details = null)
         {
             string[] questionPart = messageTemplate.Split("{0}");
             MessageFirstPart = questionPart[0];
             MessageSecondPart = questionPart[1];
+            DetailsLinePart = details;
             Parameter = parameter;
         }
 

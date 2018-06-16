@@ -111,6 +111,19 @@ namespace PhotoOrganizer.Business.Implementations
             return newFolderPath;
         }
 
+        public async Task<string> RenameAlbumFolder(string originalPath, string newName)
+        {
+            string newFolderPath = await _fileSystemService.RenameFolder(originalPath, newName);
+            int folderIndex = CurrentAlbum.SubFolders.ToList().IndexOf(originalPath);
+            if (folderIndex != -1)
+            {
+                CurrentAlbum.SubFolders[folderIndex] = newFolderPath;
+                await UpdateAlbumSubFolders(CurrentAlbum.SubFolders);
+            }
+
+            return newFolderPath;
+        }
+
         public async Task RemoveAlbumFolder(string path)
         {
             string folderToDeletePath = CurrentAlbum.SubFolders.FirstOrDefault(subFolder => subFolder == path);
