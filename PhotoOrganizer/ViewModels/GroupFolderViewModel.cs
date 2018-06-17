@@ -1,9 +1,12 @@
 ﻿using System;
 using System.IO;
 using System.Reactive;
+using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using System.Reactive.Threading.Tasks;
 using System.Threading.Tasks;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Input;
 using PhotoOrganizer.Business.Interfaces;
 using PhotoOrganizer.Controls;
 using PhotoOrganizer.Text;
@@ -11,7 +14,7 @@ using ReactiveUI;
 
 namespace PhotoOrganizer.ViewModels
 {
-    public class GroupFolderViewModel : ReactiveObject, IGroupFolderViewModel
+    public class GroupFolderViewModel : ReactiveObject, IGroupFolderViewModel, ISupportsActivation
     {
         #region Private Members
 
@@ -35,9 +38,14 @@ namespace PhotoOrganizer.ViewModels
             set => this.RaiseAndSetIfChanged(ref _index, value);
         }
 
-        public ReactiveCommand<Unit, string> ExecuteGroupLogicCommand { get; }
+        public ReactiveCommand<Unit, string> GroupLogicCommand { get; }
         public ReactiveCommand<Unit, bool> DeleteGroupCommand { get; }
         public ReactiveCommand<string, Unit> RenameCommand { get; }
+
+        public ViewModelActivator Activator { get; } = new ViewModelActivator();
+
+        private ObservableAsPropertyHelper<bool> _isInDestinationFolderHelper;
+        public bool IsInDestinationFolder => _isInDestinationFolderHelper?.Value ?? false;
 
         #endregion
 
@@ -53,9 +61,23 @@ namespace PhotoOrganizer.ViewModels
         {
             GroupPath = title;
             _currentAlbumManager = currentAlbumManager;
-            ExecuteGroupLogicCommand = ReactiveCommand.CreateFromTask(AddCurrentPhotoToGroup);
+            GroupLogicCommand = ReactiveCommand.CreateFromTask(ToggleCurrentPhoto);
             DeleteGroupCommand = ReactiveCommand.CreateFromTask(_ => DeleteGroup());
             RenameCommand = ReactiveCommand.CreateFromTask<string>(RenameGroup);
+
+            this.WhenActivated(disposables =>
+            {
+                _isInDestinationFolderHelper = _currentAlbumManager.CurrentPhotoChanged
+                    .Throttle(TimeSpan.FromMilliseconds(250))
+                    .Select(_ => Unit.Default)
+                    .Merge(GroupLogicCommand.Select(_ => Unit.Default))
+                    .StartWith(Unit.Default)
+                    .Select(_ => _currentAlbumManager.IsCurrentPhotoInFolder(GroupPath).ToObservable())
+                    .Switch()
+                    .ToProperty(this, self =>  self.IsInDestinationFolder);
+
+                disposables.Add(_isInDestinationFolderHelper);
+            });
         }
 
         public class Factory : IGroupFolderViewModelFactory
@@ -73,14 +95,6 @@ namespace PhotoOrganizer.ViewModels
         #endregion
 
         #region Private Methods
-
-        private async Task<string> AddCurrentPhotoToGroup()
-        {
-            if (await _currentAlbumManager.IsCurrentPhotoInFolder(GroupPath))
-                return await _currentAlbumManager.RemoveCurrentPhotoFromFolder(GroupPath);
-            
-            return await _currentAlbumManager.AddCurrentPhotoToFolder(GroupPath);
-        }
 
         private async Task<bool> DeleteGroup()
         {
@@ -107,6 +121,16 @@ namespace PhotoOrganizer.ViewModels
                 return;
 
             GroupPath = await _currentAlbumManager.RenameAlbumFolder(GroupPath, newName);
+        }
+
+        private async Task<string> ToggleCurrentPhoto()
+        {
+            if (IsInDestinationFolder)
+                await _currentAlbumManager.RemoveCurrentPhotoFromFolder(GroupPath);
+            else
+                await _currentAlbumManager.AddCurrentPhotoToFolder(GroupPath);
+
+            return Path.Combine(GroupPath, Path.GetFileName(_currentAlbumManager.CurrentPhoto));
         }
 
         #endregion

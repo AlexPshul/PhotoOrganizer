@@ -12,7 +12,7 @@
 
     <Button Style="{StaticResource TransparentButton}"
             Padding="5"
-            Command="{Binding ExecuteGroupLogicCommand}">
+            Command="{Binding GroupLogicCommand}">
         <FontIcon Glyph="&#xECC8;" FontSize="65"/>
     </Button>
 

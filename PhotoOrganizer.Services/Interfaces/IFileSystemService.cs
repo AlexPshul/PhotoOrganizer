@@ -8,7 +8,11 @@ namespace PhotoOrganizer.Services.Interfaces
     public interface IFileSystemService
     {
         Task<bool> DoesDirectoryExists(string path);
+        Task<bool> DoesFileExists(string folderPath, string fileName);
         Task<bool> IsValidDirectory(string destinationPath);
+
+        Task<bool> CopyFile(string source, string destinationFolder);
+        Task<bool> DeleteFile(string filePath);
 
         Task OpenDirectoryInExplorer(string fullPath);
 

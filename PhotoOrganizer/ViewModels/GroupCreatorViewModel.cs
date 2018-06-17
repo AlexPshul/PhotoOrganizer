@@ -9,11 +9,11 @@ namespace PhotoOrganizer.ViewModels
     {
         private static readonly string NewGroupBaseName = StringsReader.Get("Title_NewGroupBaseName");
 
-        public ReactiveCommand<Unit, string> ExecuteGroupLogicCommand { get; }
+        public ReactiveCommand<Unit, string> GroupLogicCommand { get; }
 
         public GroupCreatorViewModel(ICurrentAlbumManager currentAlbumManager)
         {
-            ExecuteGroupLogicCommand = ReactiveCommand.CreateFromTask(() => currentAlbumManager.AddAlbumFolder(NewGroupBaseName));
+            GroupLogicCommand = ReactiveCommand.CreateFromTask(() => currentAlbumManager.AddAlbumFolder(NewGroupBaseName));
         }
     }
 }

@@ -27,8 +27,8 @@ namespace PhotoOrganizer.Business.Interfaces
         Task<string> RenameAlbumFolder(string originalPath, string newName);
         Task RemoveAlbumFolder(string path);
 
-        Task<string> AddCurrentPhotoToFolder(string folderName);
-        Task<string> RemoveCurrentPhotoFromFolder(string folderName);
+        Task<bool> AddCurrentPhotoToFolder(string folderName);
+        Task<bool> RemoveCurrentPhotoFromFolder(string folderName);
         Task<bool> IsCurrentPhotoInFolder(string folderName);
     }
 }

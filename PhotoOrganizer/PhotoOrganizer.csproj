@@ -98,6 +98,7 @@
     <Compile Include="BehaviorActions\CancelOnLastElementReorderAction.cs" />
     <Compile Include="BehaviorActions\FocusAction.cs" />
     <Compile Include="BehaviorActions\ItemDoubleTapExecuteCommandAction.cs" />
+    <Compile Include="Behaviors\AlbumShortcutsBehavior.cs" />
     <Compile Include="Behaviors\TextBoxEditBehavior.cs" />
     <Compile Include="Controls\CustomContentDialog.cs" />
     <Compile Include="Controls\StreamImage.cs" />

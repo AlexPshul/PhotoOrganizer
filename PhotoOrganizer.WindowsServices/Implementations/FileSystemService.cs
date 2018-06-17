@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -29,6 +30,17 @@ namespace PhotoOrganizer.WindowsServices.Implementations
 
         }
 
+        public async Task<bool> DoesFileExists(string folderPath, string fileName)
+        {
+            if (!await DoesDirectoryExists(folderPath) || fileName == null)
+                return false;
+
+            StorageFolder folder = await StorageFolder.GetFolderFromPathAsync(folderPath);
+            IStorageItem storageItem = await folder.TryGetItemAsync(fileName);
+
+            return storageItem != null;
+        }
+
         public async Task<bool> IsValidDirectory(string destinationPath)
         {
             try
@@ -41,6 +53,48 @@ namespace PhotoOrganizer.WindowsServices.Implementations
             {
                 return false;
             }
+        }
+
+        public async Task<bool> CopyFile(string source, string destinationFolderPath)
+        {
+            if (!await DoesFileExists(Path.GetDirectoryName(source), Path.GetFileName(source)))
+                return false;
+
+            if (!await DoesDirectoryExists(destinationFolderPath))
+                return false;
+
+            StorageFile sourceFile = await StorageFile.GetFileFromPathAsync(source);
+            StorageFolder destinationFolder = await StorageFolder.GetFolderFromPathAsync(destinationFolderPath);
+            try
+            {
+                await sourceFile.CopyAsync(destinationFolder);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                return false;
+            }
+
+            return true;
+        }
+
+        public async Task<bool> DeleteFile(string filePath)
+        {
+            if (!await DoesFileExists(Path.GetDirectoryName(filePath), Path.GetFileName(filePath)))
+                return false;
+
+            try
+            {
+                StorageFile file = await StorageFile.GetFileFromPathAsync(filePath);
+                await file.DeleteAsync();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return false;
+            }
+
+            return true;
         }
 
         public async Task OpenDirectoryInExplorer(string fullPath)

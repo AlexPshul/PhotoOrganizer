@@ -5,6 +5,6 @@ namespace PhotoOrganizer.ViewModels
 {
     public interface IGroupItemViewModel
     {
-        ReactiveCommand<Unit, string> ExecuteGroupLogicCommand { get; }
+        ReactiveCommand<Unit, string> GroupLogicCommand { get; }
     }
 }

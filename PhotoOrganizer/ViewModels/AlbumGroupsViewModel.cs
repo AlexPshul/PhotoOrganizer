@@ -31,6 +31,7 @@ namespace PhotoOrganizer.ViewModels
         public Album Album => _currentAlbumManager.CurrentAlbum;
 
         public ReactiveCommand<Unit, Unit> OpenDestinationFolderCommand { get; }
+        public ReactiveCommand<int, Unit> CopyToGroupCommand { get; }
 
         #endregion
 
@@ -50,7 +51,7 @@ namespace PhotoOrganizer.ViewModels
                 .Throttle(TimeSpan.FromMilliseconds(100))
                 .Subscribe(_ => UpdateCurrentAlbum());
 
-            groupCreator.ExecuteGroupLogicCommand
+            groupCreator.GroupLogicCommand
                 .Select(groupFolderFactory.Create)
                 .Do(newGroup => Groups.Insert(Groups.Count - 1, newGroup))
                 .Subscribe(_ => SubscribeToGroupDeletion());
@@ -59,6 +60,7 @@ namespace PhotoOrganizer.ViewModels
             SubscribeToGroupDeletion();
 
             OpenDestinationFolderCommand = ReactiveCommand.CreateFromTask(_currentAlbumManager.LaunchAlbumDestinationFolder);
+            CopyToGroupCommand = ReactiveCommand.Create<int>(ExecuteGroupToCopy);
         }
 
         #endregion
@@ -98,6 +100,12 @@ namespace PhotoOrganizer.ViewModels
                 .Merge()
                 .Do(deletedFolder => Groups.Remove(deletedFolder))
                 .Subscribe(_ => SubscribeToGroupDeletion());
+        }
+
+        private void ExecuteGroupToCopy(int groupIndex)
+        {
+            IGroupFolderViewModel relevantGroupFolder = Groups.OfType<IGroupFolderViewModel>().FirstOrDefault(folderGroup => folderGroup.Index == groupIndex);
+            relevantGroupFolder?.GroupLogicCommand.Execute();
         }
 
         #endregion

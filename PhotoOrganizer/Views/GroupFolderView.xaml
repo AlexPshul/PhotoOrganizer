@@ -18,6 +18,11 @@
 
     <Grid BorderThickness="2" BorderBrush="{StaticResource HighHighlightBrush}"
           Background="{StaticResource TransparentHighMainBackgroundBrush}">
+        <interactivity:Interaction.Behaviors>
+            <core:EventTriggerBehavior EventName="Tapped">
+                <core:InvokeCommandAction Command="{Binding GroupLogicCommand}" InputConverter="{StaticResource AnythingToUnitConverter}"/>
+            </core:EventTriggerBehavior>
+        </interactivity:Interaction.Behaviors>
         <TextBox x:Name="GroupNameTextBox"
                  Text="{Binding GroupPath, Converter={StaticResource PathToNameConverter}}"
                  Style="{StaticResource TextBlockLikeStyle}"

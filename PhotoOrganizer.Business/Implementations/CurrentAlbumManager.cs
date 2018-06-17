@@ -134,20 +134,23 @@ namespace PhotoOrganizer.Business.Implementations
             await UpdateAlbumSubFolders(CurrentAlbum.SubFolders.Except(folderToDeletePath));
         }
 
-        public Task<string> AddCurrentPhotoToFolder(string folderName)
+        public async Task<bool> AddCurrentPhotoToFolder(string folderName)
         {
-            return Task.FromResult("");
+            if (CurrentPhoto == null)
+                return false;
+
+            return await _fileSystemService.CopyFile(CurrentPhoto, folderName);
         }
 
-        public Task<string> RemoveCurrentPhotoFromFolder(string folderName)
+        public async Task<bool> RemoveCurrentPhotoFromFolder(string folderName)
         {
-            return Task.FromResult("");
+            if (CurrentPhoto == null)
+                return false;
+
+            return await _fileSystemService.DeleteFile(Path.Combine(folderName, Path.GetFileName(CurrentPhoto)));
         }
 
-        public Task<bool> IsCurrentPhotoInFolder(string folderName)
-        {
-            return Task.FromResult(true);
-        }
+        public Task<bool> IsCurrentPhotoInFolder(string folderName) => _fileSystemService.DoesFileExists(folderName, Path.GetFileName(CurrentPhoto));
 
         #endregion
     }

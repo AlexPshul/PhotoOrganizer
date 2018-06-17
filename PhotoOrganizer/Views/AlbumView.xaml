@@ -10,10 +10,15 @@
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:controls="using:PhotoOrganizer.Controls"
     xmlns:reactiveUi="using:ReactiveUI"
+    xmlns:behaviors="using:PhotoOrganizer.Behaviors"
     mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="400"
     d:DataContext="{d:DesignInstance viewModels:AlbumViewModel}">
+
+    <interactivity:Interaction.Behaviors>
+        <behaviors:AlbumShortcutsBehavior IndexKeyCommand="{Binding AlbumGroupsViewModel.CopyToGroupCommand}"/>
+    </interactivity:Interaction.Behaviors>
 
     <UserControl.Resources>
         
@@ -109,7 +114,7 @@
         </ListView>
 
         <controls:StreamImage Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" Source="{Binding SelectedPhoto}"
-                              CacheLimit="10"/>
+                              CacheLimit="10" IsHitTestVisible="False"/>
 
         <Border Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" 
                 HorizontalAlignment="Left" Padding="0, 0, 15, 0"
