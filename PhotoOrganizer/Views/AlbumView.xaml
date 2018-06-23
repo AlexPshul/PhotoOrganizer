@@ -64,6 +64,7 @@
                 <VisualState x:Name="Regular"/>
                 <VisualState x:Name="FetchingData">
                     <VisualState.Setters>
+                        <Setter Target="LoadingPlaceHolder.Visibility" Value="Visible"/>
                         <Setter Target="ProgressRing.IsActive" Value="True"/>
                         <Setter Target="LoadingMessage.Text" Value="{Binding Source={StaticResource Strings}, Path=[Title_FetchingPhotos]}"/>
                     </VisualState.Setters>
@@ -80,11 +81,6 @@
             <ColumnDefinition Width="226"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-
-        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Grid.RowSpan="2" Grid.ColumnSpan="2">
-            <ProgressRing x:Name="ProgressRing" Foreground="{StaticResource HighHighlightBrush}" Style="{StaticResource HugeProgressRingStyle}"/>
-            <TextBlock x:Name="LoadingMessage" Style="{StaticResource TitleStyle}"/>
-        </StackPanel>
 
         <ListView x:Name="ImagesList" 
                   Grid.Column="0" Grid.Row="1"
@@ -150,6 +146,17 @@
                 BorderBrush="{StaticResource LowHighlightBrush}" BorderThickness="0, 1, 0, 0">
             <reactiveUi:ViewModelViewHost ViewModel="{Binding AlbumGroupsViewModel}"/>
         </Border>
+
+        <Grid x:Name="LoadingPlaceHolder" 
+              Grid.Row="0" Grid.Column="0"
+              Visibility="Collapsed"
+              Grid.RowSpan="2" Grid.ColumnSpan="2"
+              Background="{StaticResource TransparentHighMainBackgroundBrush}">
+            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                <ProgressRing x:Name="ProgressRing" Foreground="{StaticResource HighHighlightBrush}" Style="{StaticResource HugeProgressRingStyle}"/>
+                <TextBlock x:Name="LoadingMessage" Style="{StaticResource TitleStyle}"/>
+            </StackPanel>
+        </Grid>
 
     </Grid>
 

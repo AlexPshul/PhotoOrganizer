@@ -68,12 +68,12 @@ namespace PhotoOrganizer.ViewModels
             this.WhenActivated(disposables =>
             {
                 _isInDestinationFolderHelper = _currentAlbumManager.CurrentPhotoChanged
-                    .Throttle(TimeSpan.FromMilliseconds(250))
                     .Select(_ => Unit.Default)
                     .Merge(GroupLogicCommand.Select(_ => Unit.Default))
                     .StartWith(Unit.Default)
                     .Select(_ => _currentAlbumManager.IsCurrentPhotoInFolder(GroupPath).ToObservable())
                     .Switch()
+                    .ObserveOnDispatcher()
                     .ToProperty(this, self =>  self.IsInDestinationFolder);
 
                 disposables.Add(_isInDestinationFolderHelper);

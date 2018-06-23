@@ -18,6 +18,9 @@ namespace PhotoOrganizer.WindowsServices.Implementations
     {
         public async Task<bool> DoesDirectoryExists(string path)
         {
+            if (path == null)
+                return false;
+
             try
             {
                 StorageFolder folder = await StorageFolder.GetFolderFromPathAsync(path);
@@ -43,6 +46,9 @@ namespace PhotoOrganizer.WindowsServices.Implementations
 
         public async Task<bool> IsValidDirectory(string destinationPath)
         {
+            if (destinationPath == null)
+                return false;
+
             try
             {
                 Uri uri = new Uri(destinationPath, UriKind.Absolute);

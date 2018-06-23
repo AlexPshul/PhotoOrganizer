@@ -1,5 +1,6 @@
 ﻿<UserControl
     x:Class="PhotoOrganizer.Views.GroupFolderView"
+    x:Name="GroupFolderUserControl"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:PhotoOrganizer.Views"
@@ -16,13 +17,39 @@
     d:DataContext="{d:DesignInstance viewModels:GroupFolderViewModel}">
 
 
-    <Grid BorderThickness="2" BorderBrush="{StaticResource HighHighlightBrush}"
+    <Grid x:Name="MainGrid"
+          BorderThickness="2" BorderBrush="{StaticResource HighHighlightBrush}"
           Background="{StaticResource TransparentHighMainBackgroundBrush}">
+
         <interactivity:Interaction.Behaviors>
-            <core:EventTriggerBehavior EventName="Tapped">
-                <core:InvokeCommandAction Command="{Binding GroupLogicCommand}" InputConverter="{StaticResource AnythingToUnitConverter}"/>
-            </core:EventTriggerBehavior>
+            <core:DataTriggerBehavior Binding="{Binding IsInDestinationFolder}" Value="True">
+                <core:GoToStateAction TargetObject="{Binding ElementName=GroupFolderUserControl}" StateName="IsInDestinationFolder"/>
+            </core:DataTriggerBehavior>
+            <core:DataTriggerBehavior Binding="{Binding IsInDestinationFolder}" Value="False">
+                <core:GoToStateAction TargetObject="{Binding ElementName=GroupFolderUserControl}" StateName="Regular"/>
+            </core:DataTriggerBehavior>
         </interactivity:Interaction.Behaviors>
+
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState x:Name="Regular"/>
+                <VisualState x:Name="IsInDestinationFolder">
+                    <VisualState.Setters>
+                        <Setter Target="MainGrid.Background" Value="{StaticResource HighHighlightBrush}"/>
+                        <Setter Target="GroupNameTextBox.Foreground" Value="{StaticResource SecondaryForegroundBrush}"/>
+                        <Setter Target="IndexTextBlock.Foreground" Value="{StaticResource SecondaryForegroundBrush}"/>
+                        <Setter Target="ToggleButton.Foreground" Value="{StaticResource SecondaryForegroundBrush}"/>
+                        <Setter Target="ToggleButton.Content">
+                            <Setter.Value>
+                                <FontIcon Glyph="&#xE73E;"/>
+                            </Setter.Value>
+                        </Setter>
+                        <Setter Target="RemoveButton.Foreground" Value="{StaticResource SecondaryForegroundBrush}"/>
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+
         <TextBox x:Name="GroupNameTextBox"
                  Text="{Binding GroupPath, Converter={StaticResource PathToNameConverter}}"
                  Style="{StaticResource TextBlockLikeStyle}"
@@ -38,7 +65,8 @@
                 </core:EventTriggerBehavior>
             </interactivity:Interaction.Behaviors>
         </TextBox>
-        <Button HorizontalAlignment="Right" VerticalAlignment="Top"
+        <Button x:Name="RemoveButton"
+                HorizontalAlignment="Right" VerticalAlignment="Top"
                 Style="{StaticResource TransparentButton}"
                 Padding="2"
                 BorderThickness="1, 0, 0, 1"
@@ -46,9 +74,19 @@
                 IsTabStop="False">
             <FontIcon Glyph="&#xECC9;" FontSize="16"/>
         </Button>
-        <TextBlock Text="{Binding Index}" Padding="2, 0"
+        <TextBlock x:Name="IndexTextBlock"
+                   Text="{Binding Index}" Padding="2, 0"
                    HorizontalAlignment="Left"
                    FontFamily="{StaticResource MainFont}"/>
+        <Button x:Name="ToggleButton"
+                HorizontalAlignment="Center" VerticalAlignment="Top"
+                Style="{StaticResource TransparentButton}"
+                Padding="0"
+                Margin="5"
+                Command="{Binding GroupLogicCommand}"
+                IsTabStop="False">
+            <FontIcon Glyph="&#xF16B;"/>
+        </Button>
     </Grid>
 
 </UserControl>
