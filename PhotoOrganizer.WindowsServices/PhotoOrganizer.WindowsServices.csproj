@@ -107,6 +107,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Implementations\FileSystemService.cs" />
+    <Compile Include="Implementations\KeyPressService.cs" />
     <Compile Include="Implementations\LocalStorageService.cs" />
     <Compile Include="Module.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

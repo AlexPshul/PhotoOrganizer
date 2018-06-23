@@ -9,6 +9,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using PhotoOrganizer.Business.Interfaces;
 using PhotoOrganizer.Controls;
+using PhotoOrganizer.Infrastructure;
 using PhotoOrganizer.Text;
 using ReactiveUI;
 
@@ -19,6 +20,7 @@ namespace PhotoOrganizer.ViewModels
         #region Private Members
 
         private readonly ICurrentAlbumManager _currentAlbumManager;
+        private readonly IShortcutsManager _shortcutsManager;
 
         #endregion
 
@@ -47,6 +49,9 @@ namespace PhotoOrganizer.ViewModels
         private ObservableAsPropertyHelper<bool> _isInDestinationFolderHelper;
         public bool IsInDestinationFolder => _isInDestinationFolderHelper?.Value ?? false;
 
+        private readonly ObservableAsPropertyHelper<bool> _isExecutingHelper;
+        public bool IsExecuting => _isExecutingHelper?.Value ?? false;
+
         #endregion
 
         #region Events
@@ -57,11 +62,21 @@ namespace PhotoOrganizer.ViewModels
 
         #region Constructors
 
-        private GroupFolderViewModel(string title, ICurrentAlbumManager currentAlbumManager)
+        private GroupFolderViewModel(string title, ICurrentAlbumManager currentAlbumManager, IShortcutsManager shortcutsManager)
         {
             GroupPath = title;
             _currentAlbumManager = currentAlbumManager;
-            GroupLogicCommand = ReactiveCommand.CreateFromTask(ToggleCurrentPhoto);
+            _shortcutsManager = shortcutsManager;
+
+            IObservable<bool> currentPhotoObservable = _currentAlbumManager.CurrentPhotoChanged
+                .Select(currentPhoto => currentPhoto != null)
+                .StartWith(_currentAlbumManager.CurrentPhoto != null);
+            GroupLogicCommand = ReactiveCommand.CreateFromTask(ToggleCurrentPhoto, currentPhotoObservable);
+            _isExecutingHelper = GroupLogicCommand.IsExecuting
+                .Throttle(TimeSpan.FromMilliseconds(100))
+                .ObserveOnDispatcher()
+                .ToProperty(this, self => self.IsExecuting);
+
             DeleteGroupCommand = ReactiveCommand.CreateFromTask(_ => DeleteGroup());
             RenameCommand = ReactiveCommand.CreateFromTask<string>(RenameGroup);
 
@@ -75,21 +90,31 @@ namespace PhotoOrganizer.ViewModels
                     .Switch()
                     .ObserveOnDispatcher()
                     .ToProperty(this, self =>  self.IsInDestinationFolder);
+                _isInDestinationFolderHelper.MergeToComposite(disposables);
 
-                disposables.Add(_isInDestinationFolderHelper);
+                _shortcutsManager.GroupShortcutExecuted
+                    .Where(pressedIndex => pressedIndex == Index)
+                    .Where(_ => _currentAlbumManager.CurrentPhoto != null)
+                    .Throttle(TimeSpan.FromMilliseconds(50))
+                    .Select(_ => Unit.Default)
+                    .ObserveOnDispatcher()
+                    .InvokeCommand(GroupLogicCommand)
+                    .MergeToComposite(disposables);
             });
         }
 
         public class Factory : IGroupFolderViewModelFactory
         {
             private readonly ICurrentAlbumManager _currentAlbumManager;
+            private readonly IShortcutsManager _shortcutsManager;
 
-            public Factory(ICurrentAlbumManager currentAlbumManager)
+            public Factory(ICurrentAlbumManager currentAlbumManager, IShortcutsManager shortcutsManager)
             {
                 _currentAlbumManager = currentAlbumManager;
+                _shortcutsManager = shortcutsManager;
             }
 
-            public IGroupFolderViewModel Create(string title) => new GroupFolderViewModel(title, _currentAlbumManager);
+            public IGroupFolderViewModel Create(string title) => new GroupFolderViewModel(title, _currentAlbumManager, _shortcutsManager);
         }
 
         #endregion

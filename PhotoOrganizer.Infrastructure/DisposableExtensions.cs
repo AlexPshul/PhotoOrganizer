@@ -10,5 +10,7 @@ namespace PhotoOrganizer.Infrastructure
             onCreate();
             return Disposable.Create(onDispose);
         }
+
+        public static void MergeToComposite(this IDisposable source, CompositeDisposable compositeDisposable) => compositeDisposable.Add(source);
     }
 }

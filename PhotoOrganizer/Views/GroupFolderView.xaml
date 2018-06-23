@@ -45,6 +45,7 @@
                             </Setter.Value>
                         </Setter>
                         <Setter Target="RemoveButton.Foreground" Value="{StaticResource SecondaryForegroundBrush}"/>
+                        <Setter Target="ExecutionProgressRing.Foreground" Value="{StaticResource SecondaryForegroundBrush}"/>
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
@@ -57,7 +58,8 @@
                  HorizontalAlignment="Center" 
                  VerticalAlignment="Bottom"
                  Margin="0, 0, 0, 2"
-                 MaxWidth="{Binding ElementName=GroupNameTextBox, Path=ActualHeight}">
+                 MaxWidth="{Binding ElementName=GroupNameTextBox, Path=ActualHeight}"
+                 Visibility="{Binding IsExecuting, Converter={StaticResource InvertBooleanConverter}}">
             <interactivity:Interaction.Behaviors>
                 <behaviors:TextBoxEditBehavior EditCompletedCommand="{Binding RenameCommand}"/>
                 <core:EventTriggerBehavior EventName="GotFocus">
@@ -84,9 +86,14 @@
                 Padding="0"
                 Margin="5"
                 Command="{Binding GroupLogicCommand}"
-                IsTabStop="False">
+                IsTabStop="False"
+                Visibility="{Binding IsExecuting, Converter={StaticResource InvertBooleanConverter}}">
             <FontIcon Glyph="&#xF16B;"/>
         </Button>
+        <ProgressRing x:Name="ExecutionProgressRing"
+                      IsActive="{Binding IsExecuting}"
+                      HorizontalAlignment="Center" VerticalAlignment="Center"
+                      Style="{StaticResource SmallProgressRingStyle}"/>
     </Grid>
 
 </UserControl>

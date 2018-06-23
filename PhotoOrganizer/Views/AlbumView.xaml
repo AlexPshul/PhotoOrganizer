@@ -16,9 +16,9 @@
     d:DesignWidth="400"
     d:DataContext="{d:DesignInstance viewModels:AlbumViewModel}">
 
-    <interactivity:Interaction.Behaviors>
+    <!--<interactivity:Interaction.Behaviors>
         <behaviors:AlbumShortcutsBehavior IndexKeyCommand="{Binding AlbumGroupsViewModel.CopyToGroupCommand}"/>
-    </interactivity:Interaction.Behaviors>
+    </interactivity:Interaction.Behaviors>-->
 
     <UserControl.Resources>
         

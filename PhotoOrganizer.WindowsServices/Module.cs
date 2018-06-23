@@ -10,6 +10,7 @@ namespace PhotoOrganizer.WindowsServices
         {
             builder.RegisterType<LocalStorageService>().As<ILocalStorageService>().SingleInstance();
             builder.RegisterType<FileSystemService>().As<IFileSystemService>().SingleInstance();
+            builder.RegisterType<KeyPressService>().As<IKeyPressService>().SingleInstance();
         }
     }
 }

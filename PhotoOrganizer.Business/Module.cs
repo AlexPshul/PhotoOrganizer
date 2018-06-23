@@ -1,6 +1,7 @@
 ﻿using Autofac;
 using PhotoOrganizer.Business.Implementations;
 using PhotoOrganizer.Business.Interfaces;
+using PhotoOrganizer.Business.Models;
 
 namespace PhotoOrganizer.Business
 {
@@ -10,6 +11,7 @@ namespace PhotoOrganizer.Business
         {
             builder.RegisterType<AlbumsManager>().As<IAlbumsManager>().SingleInstance();
             builder.RegisterType<CurrentAlbumManager>().As<ICurrentAlbumManager>().SingleInstance();
+            builder.RegisterType<ShortcutsManager>().As<IShortcutsManager>().SingleInstance();
         }
     }
 }
