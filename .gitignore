@@ -16,3 +16,6 @@
 /PhotoOrganizer.WindowsServices/obj
 /.vs/PhotoOrganizer/DesignTimeBuild/.dtbcache
 /PhotoOrganizer.WindowsServices/bin/x86/Release
+/PhotoOrganizer/AppPackages
+/PhotoOrganizer/BundleArtifacts
+/PhotoOrganizer.WindowsServices/bin
