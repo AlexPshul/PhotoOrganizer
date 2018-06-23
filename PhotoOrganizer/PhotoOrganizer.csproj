@@ -17,7 +17,8 @@
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WindowsXamlEnableOverview>true</WindowsXamlEnableOverview>
-    <PackageCertificateKeyFile>PhotoOrganizer_TemporaryKey.pfx</PackageCertificateKeyFile>
+    <PackageCertificateKeyFile>PhotoOrganizer_StoreKey.pfx</PackageCertificateKeyFile>
+    <PackageCertificateThumbprint>009465667E93258BACA1DF7DC0C37F1514E43F62</PackageCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
@@ -167,6 +168,7 @@
     <Content Include="Assets\BadgeLogo.scale-125.png" />
     <Content Include="Assets\BadgeLogo.scale-150.png" />
     <Content Include="Assets\Fonts\Good-Times.ttf" />
+    <None Include="PhotoOrganizer_StoreKey.pfx" />
     <None Include="PhotoOrganizer_TemporaryKey.pfx" />
     <PRIResource Include="Text\Strings.resw" />
   </ItemGroup>
@@ -187,6 +189,7 @@
     <Content Include="Assets\StoreLogo.scale-100.png" />
     <Content Include="Assets\StoreLogo.scale-150.png" />
     <Content Include="Assets\StoreLogo.scale-200.png" />
+    <None Include="Package.StoreAssociation.xml" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />

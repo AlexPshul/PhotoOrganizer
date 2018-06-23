@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities" IgnorableNamespaces="uap mp rescap">
-  <Identity Name="1bf9151e-fa0e-4bba-8c11-d4dda8e1d977" Publisher="CN=alex" Version="1.0.0.0" />
-  <mp:PhoneIdentity PhoneProductId="1bf9151e-fa0e-4bba-8c11-d4dda8e1d977" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
+  <Identity Name="31010AlexPshul.PhotOrganizer" Publisher="CN=13D27B33-36A2-4276-ABAE-6CDC79FCFF38" Version="1.1.0.0" />
+  <mp:PhoneIdentity PhoneProductId="0854db8c-83e6-4404-a699-4cbd9c00ca9a" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
-    <DisplayName>PhotoOrganizer</DisplayName>
-    <PublisherDisplayName>alex</PublisherDisplayName>
+    <DisplayName>PhotOrganizer</DisplayName>
+    <PublisherDisplayName>Alex Pshul</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
   <Dependencies>
@@ -15,7 +15,7 @@
   </Resources>
   <Applications>
     <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="PhotoOrganizer.App">
-      <uap:VisualElements DisplayName="PhotoOrganizer" Square150x150Logo="Assets\Square150x150Logo.png" Square44x44Logo="Assets\Square44x44Logo.png" Description="PhotoOrganizer" BackgroundColor="transparent">
+      <uap:VisualElements DisplayName="PhotOrganizer" Square150x150Logo="Assets\Square150x150Logo.png" Square44x44Logo="Assets\Square44x44Logo.png" Description="A neat photo organizer application, which will allow you to sort a large album into smaller albums. Using the shortcut keys of 1 to 9, you can copy images to the created sub folders." BackgroundColor="transparent">
         <uap:LockScreen Notification="badge" BadgeLogo="Assets\BadgeLogo.png" />
         <uap:DefaultTile Square71x71Logo="Assets\Square71x71Logo.png" Square310x310Logo="Assets\Square310x310Logo.png" Wide310x150Logo="Assets\Wide310x150Logo.png">
           <uap:ShowNameOnTiles>
@@ -24,6 +24,10 @@
           </uap:ShowNameOnTiles>
         </uap:DefaultTile>
         <uap:SplashScreen Image="Assets\SplashScreen.png" />
+        <uap:InitialRotationPreference>
+          <uap:Rotation Preference="landscape" />
+          <uap:Rotation Preference="landscapeFlipped" />
+        </uap:InitialRotationPreference>
       </uap:VisualElements>
     </Application>
   </Applications>
