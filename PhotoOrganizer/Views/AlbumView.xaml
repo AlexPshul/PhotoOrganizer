@@ -10,15 +10,10 @@
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:controls="using:PhotoOrganizer.Controls"
     xmlns:reactiveUi="using:ReactiveUI"
-    xmlns:behaviors="using:PhotoOrganizer.Behaviors"
     mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="400"
     d:DataContext="{d:DesignInstance viewModels:AlbumViewModel}">
-
-    <!--<interactivity:Interaction.Behaviors>
-        <behaviors:AlbumShortcutsBehavior IndexKeyCommand="{Binding AlbumGroupsViewModel.CopyToGroupCommand}"/>
-    </interactivity:Interaction.Behaviors>-->
 
     <UserControl.Resources>
         
