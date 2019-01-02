@@ -211,8 +211,11 @@ namespace PhotoOrganizer.ViewModels
             };
 
             StorageFolder storageFolder = await folderPicker.PickSingleFolderAsync();
+            if (storageFolder == null)
+                return string.Empty;
+
             StorageApplicationPermissions.FutureAccessList.Add(storageFolder);
-            return storageFolder?.Path ?? string.Empty;
+            return storageFolder.Path;
         }
 
         #endregion
